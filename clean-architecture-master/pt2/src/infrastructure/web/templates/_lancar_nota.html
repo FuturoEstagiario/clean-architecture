@@ -1,0 +1,25 @@
+<div class="card">
+  <h2>Lançar Nota</h2>
+  <label>Matrícula do Aluno</label>
+  <input id="ln-matricula" placeholder="ex: 2026001" />
+  <label>Disciplina</label>
+  <input id="ln-disciplina" placeholder="ex: Matemática" />
+  <label>Valor (0 a 10)</label>
+  <input id="ln-valor" type="number" step="0.1" min="0" max="10" placeholder="ex: 8.5" />
+  <button onclick="lancarNota()">Lançar Nota</button>
+  <div class="result" id="ln-result"></div>
+</div>
+
+<script>
+  async function lancarNota() {
+    const matricula = document.getElementById('ln-matricula').value.trim();
+    const disciplina = document.getElementById('ln-disciplina').value.trim();
+    const valor = parseFloat(document.getElementById('ln-valor').value);
+    const res = await fetch('/notas', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ matricula, disciplina, valor })
+    });
+    mostrar('ln-result', await res.json(), res.ok);
+  }
+</script>

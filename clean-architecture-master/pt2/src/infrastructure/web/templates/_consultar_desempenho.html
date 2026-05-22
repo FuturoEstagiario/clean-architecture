@@ -1,0 +1,15 @@
+<div class="card">
+  <h2>Consultar Desempenho</h2>
+  <label>Matrícula do Aluno</label>
+  <input id="cd-matricula" placeholder="ex: 2026001" />
+  <button onclick="consultarDesempenho()">Consultar</button>
+  <div class="result" id="cd-result"></div>
+</div>
+
+<script>
+  async function consultarDesempenho() {
+    const matricula = document.getElementById('cd-matricula').value.trim();
+    const res = await fetch('/desempenho/' + encodeURIComponent(matricula));
+    mostrar('cd-result', await res.json(), res.ok);
+  }
+</script>

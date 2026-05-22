@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Início — Gestão Acadêmica{% endblock %}
+
+{% block content %}
+  <p class="page-title">Selecione uma funcionalidade</p>
+  <div class="home-grid">
+
+    <a class="home-card" href="/cadastrar-aluno">
+      <h3>Cadastrar Aluno</h3>
+      <p>Registar um novo aluno no sistema com matrícula e nome.</p>
+    </a>
+
+    <a class="home-card" href="/lancar-nota">
+      <h3>Lançar Nota</h3>
+      <p>Atribuir uma nota a um aluno numa disciplina (0 a 10).</p>
+    </a>
+
+    <a class="home-card" href="/consultar-desempenho">
+      <h3>Consultar Desempenho</h3>
+      <p>Ver notas, média e situação acadêmica de um aluno.</p>
+    </a>
+
+  </div>
+{% endblock %}

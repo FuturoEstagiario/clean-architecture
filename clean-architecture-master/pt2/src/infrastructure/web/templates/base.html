@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}Sistema de Gestão Acadêmica{% endblock %}</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f4f6f9; color: #333; min-height: 100vh; }
+
+    nav {
+      background: #2c3e50;
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      height: 56px;
+    }
+    nav .brand { color: #fff; font-weight: 600; font-size: 1rem; text-decoration: none; }
+    nav a { color: #bdc3c7; text-decoration: none; font-size: 0.9rem; padding: 0.4rem 0.75rem; border-radius: 4px; transition: background 0.15s; }
+    nav a:hover, nav a.active { background: #3498db; color: #fff; }
+
+    main { padding: 2rem; }
+
+    .page-title { color: #2c3e50; font-size: 1.4rem; margin-bottom: 1.5rem; }
+
+    .card { background: #fff; border-radius: 8px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,.08); max-width: 480px; }
+    .card h2 { font-size: 1.1rem; color: #2c3e50; margin-bottom: 1rem; border-bottom: 2px solid #3498db; padding-bottom: 0.5rem; }
+
+    label { display: block; font-size: 0.85rem; color: #555; margin-bottom: 0.25rem; margin-top: 0.75rem; }
+    input { width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #ddd; border-radius: 5px; font-size: 0.95rem; }
+    button { margin-top: 1rem; width: 100%; padding: 0.6rem; background: #3498db; color: #fff; border: none; border-radius: 5px; font-size: 0.95rem; cursor: pointer; }
+    button:hover { background: #2980b9; }
+
+    .result { margin-top: 1rem; padding: 0.75rem; border-radius: 5px; font-size: 0.875rem; display: none; white-space: pre-wrap; }
+    .result.ok  { background: #eafaf1; border: 1px solid #2ecc71; color: #1a7a45; }
+    .result.err { background: #fdedec; border: 1px solid #e74c3c; color: #922b21; }
+
+    .home-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; max-width: 800px; }
+    .home-card { background: #fff; border-radius: 8px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,.08); text-decoration: none; color: #2c3e50; transition: transform 0.15s, box-shadow 0.15s; }
+    .home-card:hover { transform: translateY(-3px); box-shadow: 0 6px 16px rgba(0,0,0,.12); }
+    .home-card h3 { font-size: 1rem; margin-bottom: 0.5rem; color: #3498db; }
+    .home-card p { font-size: 0.85rem; color: #7f8c8d; }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a class="brand" href="/">🎓 Gestão Acadêmica</a>
+    <a href="/cadastrar-aluno" {% if request.path == '/cadastrar-aluno' %}class="active"{% endif %}>Cadastrar Aluno</a>
+    <a href="/lancar-nota"     {% if request.path == '/lancar-nota' %}class="active"{% endif %}>Lançar Nota</a>
+    <a href="/consultar-desempenho" {% if request.path == '/consultar-desempenho' %}class="active"{% endif %}>Consultar Desempenho</a>
+  </nav>
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <script>
+    function mostrar(id, dados, ok) {
+      const el = document.getElementById(id);
+      el.className = 'result ' + (ok ? 'ok' : 'err');
+      el.style.display = 'block';
+      el.textContent = JSON.stringify(dados, null, 2);
+    }
+  </script>
+  {% block scripts %}{% endblock %}
+
+</body>
+</html>

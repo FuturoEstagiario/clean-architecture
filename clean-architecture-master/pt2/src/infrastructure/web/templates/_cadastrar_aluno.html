@@ -1,0 +1,22 @@
+<div class="card">
+  <h2>Cadastrar Aluno</h2>
+  <label>Matrícula</label>
+  <input id="ca-matricula" placeholder="ex: 2026001" />
+  <label>Nome</label>
+  <input id="ca-nome" placeholder="ex: Carlos Silva" />
+  <button onclick="cadastrarAluno()">Cadastrar</button>
+  <div class="result" id="ca-result"></div>
+</div>
+
+<script>
+  async function cadastrarAluno() {
+    const matricula = document.getElementById('ca-matricula').value.trim();
+    const nome = document.getElementById('ca-nome').value.trim();
+    const res = await fetch('/alunos', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ matricula, nome })
+    });
+    mostrar('ca-result', await res.json(), res.ok);
+  }
+</script>
