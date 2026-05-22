@@ -27,18 +27,31 @@ src/
 
 ## Como executar
 
-**Requisitos:** Python 3.8+ e pip
+**Requisitos:** Python 3.8+ e pip instalados.
 
 ```bash
-# 1. Instalar dependências (a partir da pasta pt2/)
+# 1. Entrar na pasta do projeto
+cd clean-architecture-master/pt2
+
+# 2. Instalar dependências
 pip install -r src/requirements.txt
 
-# 2. Iniciar o servidor
-cd pt2
+# 3. Iniciar o servidor
 python -m src.main
 ```
 
 Abrir no browser: **http://127.0.0.1:5000**
+
+> O banco de dados `academico.db` é criado automaticamente na primeira execução — não é necessário nenhuma configuração adicional.
+
+### Páginas disponíveis
+
+| URL | Descrição |
+|-----|-----------|
+| `http://127.0.0.1:5000/` | Página inicial com navegação |
+| `http://127.0.0.1:5000/cadastrar-aluno` | Cadastrar um novo aluno |
+| `http://127.0.0.1:5000/lancar-nota` | Lançar nota para um aluno |
+| `http://127.0.0.1:5000/consultar-desempenho` | Consultar notas, média e situação acadêmica |
 
 ---
 

@@ -1,51 +1,64 @@
-# Sistema de Gestão Académica — Sprint 1
+# Sistema de Gestão Acadêmica
 
-## Arquitetura escolhida
+Projeto desenvolvido para a disciplina de Arquitetura de Software, utilizando **Clean Architecture** (Arquitetura Limpa).
 
-**Clean Architecture** (Arquitetura Limpa).
+**Grupo:** Bruno Rodrigues dos Santos · Carlos Eduardo Carvalho Meneguette · Leandro de Araujo · Vinicius Andrade Michaki Hubner
 
-O projeto organiza o código em camadas concêntricas onde as dependências apontam sempre para dentro — o domínio não conhece ninguém, a aplicação conhece só o domínio, e a infraestrutura implementa as interfaces definidas pelas camadas internas.
+---
 
-## Fluxo iniciado
+## Como executar
 
-**Cadastro de Aluno** — o único caso de uso implementado neste sprint.
-
-O fluxo percorre as camadas de fora para dentro e de volta:
-
-```
-main.py
-  └─> CadastrarAluno (Use Case)
-        └─> Aluno (Entity)
-        └─> IAlunoRepository (interface)
-              └─> MemoryAlunoRepository (implementação em memória)
-```
-
-## Principais pastas
-
-```
-src/
-├── domain/
-│   └── entities/          # Regras de negócio puras (Aluno)
-├── application/
-│   ├── use_cases/         # Casos de uso (CadastrarAluno)
-│   └── repositories/      # Interfaces/contratos (IAlunoRepository)
-├── interface_adapters/
-│   └── repositories_impl/ # Implementações concretas (MemoryAlunoRepository)
-└── infrastructure/
-    └── web/               # Ponto de entrada web (app.py — preparado, não ativo)
-```
-
-## O que está funcionando
-
-- Entidade `Aluno` criada com matrícula, nome e situação padrão `"Ativo"`.
-- Contrato `IAlunoRepository` definido com método `salvar`.
-- Implementação `MemoryAlunoRepository` armazenando alunos em lista em memória.
-- Caso de uso `CadastrarAluno` orquestrando a criação e persistência.
-- `main.py` executando o fluxo completo e exibindo os registros salvos no terminal.
-
-Para executar:
+**Requisitos:** Python 3.8+ e pip instalados.
 
 ```bash
+# 1. Entrar na pasta do projeto
 cd pt2
+
+# 2. Instalar dependências
+pip install -r src/requirements.txt
+
+# 3. Iniciar o servidor
 python -m src.main
 ```
+
+Abrir no browser: **http://127.0.0.1:5000**
+
+> O banco de dados `academico.db` é criado automaticamente na primeira execução.
+
+### Páginas disponíveis
+
+| URL | Descrição |
+|-----|-----------|
+| `http://127.0.0.1:5000/` | Página inicial com navegação |
+| `http://127.0.0.1:5000/cadastrar-aluno` | Cadastrar um novo aluno |
+| `http://127.0.0.1:5000/lancar-nota` | Lançar nota para um aluno |
+| `http://127.0.0.1:5000/consultar-desempenho` | Consultar notas, média e situação acadêmica |
+
+---
+
+## Estrutura do projeto
+
+```
+pt2/
+└── src/
+    ├── domain/
+    │   └── entities/               # Entidades de domínio (Aluno, Nota)
+    ├── application/
+    │   ├── use_cases/              # Casos de uso (CadastrarAluno, LancarNota, ConsultarDesempenho)
+    │   └── repositories/           # Interfaces/contratos (IAlunoRepository, INotaRepository)
+    ├── interface_adapters/
+    │   ├── controllers/            # Controllers Flask
+    │   └── repositories_impl/     # Implementações SQLite e memória
+    └── infrastructure/
+        ├── database/               # Conexão e inicialização SQLite
+        └── web/
+            ├── app.py              # Factory Flask
+            └── templates/          # Templates HTML por módulo
+```
+
+## Sprints
+
+| Sprint | Descrição |
+|--------|-----------|
+| Sprint 1 | Estrutura base da Clean Architecture + entidade `Aluno` + repositório em memória |
+| Sprint 2 | Persistência SQLite + Lançar Nota + Consultar Desempenho + interface web modular |
