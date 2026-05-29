@@ -1,0 +1,8 @@
+# Web Framework (Camada de Infraestrutura)
+flask==3.0.0
+
+# Banco de Dados (Nativo do Python, mas listado para clareza)
+# sqlite3 
+
+# Testes (Essencial para validar regras de negócio no domínio)
+pytest==8.0.0

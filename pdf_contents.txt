@@ -1,0 +1,1397 @@
+
+==================== LENDO: Arquitetura_TP1_Revisado (2).pdf ====================
+Total de páginas: 9
+
+--- Página 1 ---
+ 
+ESPECIFICAÇÃO  ARQUITETURAL 
+Trabalho  Prático  1  —  Arquitetura  de  Software 
+ 
+Bruno  Rodrigues  dos  Santos  Carlos  Eduardo  Carvalho  Meneguette  Leandro  de  Araujo  Vinicius  Andrade  Michaki  Hubner   
+2026   
+
+--- Página 2 ---
+1.  Descrição  da  Aplicação  
+O  sistema  proposto  é  um  Sistema  de  Gestão  Acadêmica,  desenvolvido  para  auxiliar  
+instituições
+ 
+de
+ 
+ensino
+ 
+no
+ 
+controle
+ 
+de
+ 
+informações
+ 
+relacionadas
+ 
+a
+ 
+alunos,
+ 
+professores,
+ 
+disciplinas,
+ 
+notas
+ 
+e
+ 
+frequência.
+  O  problema  central  abordado  consiste  na  dificuldade  de  organização  e  controle  de  dados  
+acadêmicos.
+ 
+Muitas
+ 
+instituições
+ 
+ainda
+ 
+dependem
+ 
+de
+ 
+processos
+ 
+manuais
+ 
+ou
+ 
+de
+ 
+sistemas
+ 
+pouco
+ 
+integrados,
+ 
+o
+ 
+que
+ 
+resulta
+ 
+em
+ 
+inconsistência
+ 
+de
+ 
+informações,
+ 
+dificuldade
+ 
+de
+ 
+acesso
+ 
+e
+ 
+baixa
+ 
+eficiência
+ 
+na
+ 
+gestão.
+  
+1.1  Objetivos  do  Sistema  •  Facilitar  o  registro  e  o  acompanhamento  de  notas  e  frequência  dos  alunos.  •  Melhorar  a  organização  e  o  controle  das  informações  acadêmicas.  •  Garantir  acesso  confiável  aos  dados  por  parte  de  alunos  e  professores.   
+1.2  Usuários  Principais  Aluno:  consulta  de  notas,  frequência  e  desempenho  acadêmico.  Professor:  lançamento  de  notas,  registro  de  faltas  e  acompanhamento  de  turmas.  Administrador:  gerenciamento  de  usuários,  disciplinas  e  estrutura  do  sistema.   
+2.  Arquitetura  Escolhida  
+A  arquitetura  adotada  para  o  desenvolvimento  do  sistema  é  a  Clean  Architecture  (Arquitetura  
+Limpa).
+ 
+Essa
+ 
+abordagem
+ 
+organiza
+ 
+a
+ 
+aplicação
+ 
+em
+ 
+camadas
+ 
+concêntricas
+ 
+e
+ 
+independentes,
+ 
+orientadas
+ 
+pelas
+ 
+regras
+ 
+de
+ 
+negócio,
+ 
+garantindo
+ 
+que
+ 
+o
+ 
+núcleo
+ 
+do
+ 
+sistema
+ 
+não
+ 
+dependa
+ 
+de
+ 
+tecnologias
+ 
+ou
+ 
+frameworks
+ 
+externos.
+  
+3.  Justificativa  da  Escolha  Arquitetural  
+A  Clean  Architecture  foi  escolhida  por  se  adequar  às  características  específicas  de  um  sistema  
+acadêmico,
+ 
+no
+ 
+qual
+ 
+as
+ 
+regras
+ 
+de
+ 
+negócio
+ 
+são
+ 
+numerosas,
+ 
+detalhadas
+ 
+e
+ 
+sujeitas
+ 
+a
+ 
+alterações
+ 
+frequentes.
+  As  principais  motivações  para  essa  escolha  são:   •  Isolamento  das  regras  de  negócio:  funcionalidades  como  cálculo  de  média,  validação  
+de
+ 
+frequência,
+ 
+matrícula
+ 
+em
+ 
+disciplinas
+ 
+e
+ 
+controle
+ 
+de
+ 
+pré-requisitos
+ 
+ficam
+ 
+no
+ 
+núcleo
+ 
+da
+ 
+aplicação,
+ 
+sem
+ 
+dependência
+ 
+de
+ 
+frameworks,
+ 
+banco
+ 
+de
+ 
+dados
+ 
+ou
+ 
+interface
+ 
+gráfica.
+ •  Independência  tecnológica:  alterações  em  tecnologias  externas  —  como  troca  de  
+banco
+ 
+de
+ 
+dados,
+ 
+framework
+ 
+backend
+ 
+ou
+ 
+adição
+ 
+de
+ 
+uma
+ 
+interface
+ 
+mobile
+ 
+—
+ 
+não
+ 
+afetam
+ 
+o
+ 
+núcleo
+ 
+do
+ 
+sistema,
+ 
+reduzindo
+ 
+o
+ 
+custo
+ 
+de
+ 
+manutenção.
+ 
+
+--- Página 3 ---
+•  Testabilidade:  a  separação  entre  camadas  permite  testar  funcionalidades  como  
+aprovação,
+ 
+reprovação
+ 
+e
+ 
+matrícula
+ 
+de
+ 
+forma
+ 
+isolada,
+ 
+sem
+ 
+necessidade
+ 
+de
+ 
+configurar
+ 
+infraestrutura
+ 
+completa.
+ •  Organização  e  escalabilidade:  a  estrutura  em  camadas  facilita  a  divisão  de  
+responsabilidades
+ 
+entre
+ 
+os
+ 
+membros
+ 
+da
+ 
+equipe
+ 
+e
+ 
+suporta
+ 
+a
+ 
+adição
+ 
+de
+ 
+novas
+ 
+funcionalidades
+ 
+sem
+ 
+comprometer
+ 
+as
+ 
+existentes.
+  
+4.  Requisitos  e  Escopo  Inicial  
+4.1  Funcionalidades  Previstas  •  Cadastro  de  alunos,  professores  e  administradores.  •  Autenticação  de  usuários  com  controle  de  acesso  por  perfil.  •  Cadastro  e  gerenciamento  de  disciplinas.  •  Matrícula  de  alunos  em  disciplinas.  •  Lançamento  de  notas  pelos  professores.  •  Registro  de  frequência  (faltas  por  disciplina).  •  Consulta  de  notas  e  frequência  pelos  alunos.  •  Cálculo  automático  de  média  final.  •  Identificação  de  situação  acadêmica  (aprovado  ou  reprovado).   
+4.2  Escopo  Mínimo  para  o  TP2  Para  a  próxima  etapa  do  projeto,  serão  implementadas  as  seguintes  funcionalidades  
+essenciais:
+  •  Autenticação  de  usuários  com  diferenciação  de  perfis  (aluno,  professor  e  
+administrador).
+ •  Cadastro  de  alunos  e  disciplinas.  •  Matrícula  de  alunos  em  disciplinas.  •  Lançamento  de  notas  pelos  professores.  •  Registro  de  faltas  por  disciplina.  •  Consulta  de  desempenho  acadêmico  (notas  e  frequência)  pelos  alunos.  •  Cálculo  de  média  final  e  definição  da  situação  acadêmica.  •  Persistência  de  dados  em  banco  de  dados  relacional  (SQLite).  •  Interface  de  acesso  via  interface  web  básica.   Funcionalidades  como  relatórios  avançados,  notificações  automatizadas  e  integrações  com  
+sistemas
+ 
+externos
+ 
+estão
+ 
+fora
+ 
+do
+ 
+escopo
+ 
+desta
+ 
+etapa
+ 
+e
+ 
+poderão
+ 
+ser
+ 
+incorporadas
+ 
+em
+ 
+versões
+ 
+futuras.
+  
+5.  Decomposição  do  Sistema  
+O  sistema  é  estruturado  em  quatro  camadas  concêntricas,  seguindo  os  princípios  da  Clean  
+Architecture.
+ 
+Cada
+ 
+camada
+ 
+possui
+ 
+responsabilidades
+ 
+bem
+ 
+definidas,
+ 
+e
+ 
+a
+ 
+dependência
+ 
+entre
+ 
+
+--- Página 4 ---
+elas  flui  sempre  de  fora  para  dentro:  as  camadas  externas  dependem  das  internas,  nunca  o  
+contrário.
+  
+5.1  Entidades  (Entities)  Representam  as  regras  de  negócio  centrais  e  os  objetos  principais  do  domínio  acadêmico.  São  
+independentes
+ 
+de
+ 
+qualquer
+ 
+tecnologia
+ 
+ou
+ 
+framework.
+  •  Aluno  –  dados  pessoais,  matrícula  e  situação  acadêmica.  •  Professor  –  identificação  e  vínculo  com  disciplinas.  •  Disciplina  –  código,  nome,  carga  horária  e  pré-requisitos.  •  Nota  –  valor  numérico,  tipo  de  avaliação  e  vínculo  com  aluno  e  disciplina.  •  Frequencia  –  registro  de  presença  ou  falta  por  aula/período.   
+5.2  Casos  de  Uso  (Use  Cases)  Implementam  a  lógica  da  aplicação,  coordenando  entidades  e  repositórios  para  executar  as  
+operações
+ 
+concretas
+ 
+do
+ 
+sistema.
+  •  CadastrarAluno  –  valida  e  persiste  um  novo  aluno  no  sistema.  •  CadastrarDisciplina  –  registra  uma  nova  disciplina  com  suas  regras.  •  MatricularAluno  –  associa  um  aluno  a  uma  disciplina,  respeitando  pré-requisitos.  •  LancarNota  –  registra  avaliação  de  um  aluno  em  determinada  disciplina.  •  RegistrarFalta  –  computa  ausência  de  um  aluno  em  uma  aula.  •  CalcularMedia  –  aplica  a  regra  de  cálculo  de  média  final.  •  ConsultarDesempenho  –  retorna  notas  e  frequência  consolidadas  por  aluno.  •  AutenticarUsuario  –  valida  credenciais  e  retorna  o  perfil  de  acesso.   
+5.3  Adaptadores  de  Interface  (Interface  Adapters)  Realizam  a  comunicação  entre  o  núcleo  do  sistema  e  os  mecanismos  externos,  traduzindo  
+dados
+ 
+e
+ 
+chamadas
+ 
+entre
+ 
+as
+ 
+camadas.
+  •  Controllers  –  recebem  requisições  externas  (HTTP)  e  delegam  aos  casos  de  uso.  •  Presenters  –  formatam  os  dados  de  saída  para  o  formato  esperado  pela  interface.  •  Repositórios  (interfaces)  –  definem  contratos  de  acesso  a  dados,  implementados  na  
+camada
+ 
+de
+ 
+infraestrutura.
+  
+5.4  Frameworks  e  Infraestrutura  (Frameworks  &  Drivers)  Contêm  as  implementações  concretas  das  tecnologias  externas.  É  a  única  camada  que  pode  
+ser
+ 
+substituída
+ 
+sem
+ 
+impacto
+ 
+nas
+ 
+camadas
+ 
+internas.
+  •  Banco  de  dados  –  implementação  dos  repositórios  com  SQLite.  •  Interface  web  –  camada  de  apresentação  acessada  pelo  navegador.  
+
+--- Página 5 ---
+•  Framework  backend  –  responsável  pelo  roteamento  e  gerenciamento  de  requisições  
+HTTP.
+  
+6.  Relação  com  POO  e  SOLID  
+6.1  Princípios  de  Orientação  a  Objetos  Encapsulamento:  as  entidades  (Aluno,  Nota,  Frequencia)  agrupam  dados  e  comportamentos,  
+expondo
+ 
+apenas
+ 
+as
+ 
+operações
+ 
+necessárias.
+ Abstração:  repositórios  e  serviços  são  definidos  como  interfaces,  permitindo  que  a  camada  de  
+casos
+ 
+de
+ 
+uso
+ 
+opere
+ 
+sem
+ 
+conhecer
+ 
+as
+ 
+implementações
+ 
+concretas.
+ Composição:  casos  de  uso  são  construídos  pela  combinação  de  entidades,  repositórios  e  
+serviços
+ 
+auxiliares,
+ 
+evitando
+ 
+herança
+ 
+excessiva.
+  
+6.2  Princípios  SOLID  Single  Responsibility  Principle  (SRP):  cada  classe  possui  uma  única  razão  para  ser  
+alterada.
+ 
+Entidades
+ 
+cuidam
+ 
+das
+ 
+regras
+ 
+de
+ 
+domínio;
+ 
+casos
+ 
+de
+ 
+uso,
+ 
+da
+ 
+lógica
+ 
+de
+ 
+aplicação;
+ 
+repositórios,
+ 
+da
+ 
+persistência.
+ Open/Closed  Principle  (OCP):  o  sistema  pode  ser  estendido  —  por  exemplo,  com  novos  tipos  
+de
+ 
+avaliação
+ 
+—
+ 
+sem
+ 
+necessidade
+ 
+de
+ 
+modificar
+ 
+código
+ 
+existente.
+ Liskov  Substitution  Principle  (LSP):  as  implementações  concretas  dos  repositórios  
+respeitam
+ 
+os
+ 
+contratos
+ 
+definidos
+ 
+pelas
+ 
+interfaces,
+ 
+podendo
+ 
+ser
+ 
+substituídas
+ 
+sem
+ 
+alterar
+ 
+o
+ 
+comportamento
+ 
+esperado.
+ Interface  Segregation  Principle  (ISP):  interfaces  são  definidas  de  forma  específica  para  cada  
+contexto,
+ 
+evitando
+ 
+dependências
+ 
+desnecessárias
+ 
+entre
+ 
+componentes.
+ Dependency  Inversion  Principle  (DIP):  as  camadas  internas  dependem  de  abstrações  
+(interfaces),
+ 
+não
+ 
+de
+ 
+implementações
+ 
+concretas.
+ 
+A
+ 
+injeção
+ 
+de
+ 
+dependências
+ 
+garante
+ 
+esse
+ 
+desacoplamento
+ 
+em
+ 
+tempo
+ 
+de
+ 
+execução.
+  
+7.  Padrões  de  Projeto  
+Os  padrões  a  seguir  foram  selecionados  por  sua  compatibilidade  direta  com  a  Clean  
+Architecture,
+ 
+contribuindo
+ 
+para
+ 
+a
+ 
+modularidade,
+ 
+testabilidade
+ 
+e
+ 
+manutenibilidade
+ 
+do
+ 
+sistema.
+  
+Padrão Função  no  Sistema Camada  de  Aplicação 
+Repository  Abstrai  o  acesso  ao  banco  de  dados,  desacoplando  a  lógica  de  persistência  das  regras  de  negócio.  
+Interface  Adapters  /  Infraestrutura  
+Use  Case  (Application  Service)  
+Organiza  e  executa  a  lógica  de  aplicação,  coordenando  entidades  e  repositórios  para  cada  operação.  
+Use  Cases  
+Dependency  Injection  
+Injeta  implementações  concretas  nas  dependências  abstratas,  garantindo  baixo  acoplamento  entre  as  camadas.  
+Todas  as  camadas  
+
+--- Página 6 ---
+Padrão Função  no  Sistema Camada  de  Aplicação 
+DTO  (Data  Transfer  Object)  
+Transporta  dados  entre  camadas  sem  expor  entidades  de  domínio  às  camadas  externas.  
+Interface  Adapters  
+ 
+8.  Diagrama  Arquitetural  
+O  diagrama  a  seguir  ilustra  a  organização  em  camadas  da  Clean  Architecture  aplicada  ao  
+Sistema
+ 
+de
+ 
+Gestão
+ 
+Acadêmica.
+ 
+As
+ 
+dependências
+ 
+fluem
+ 
+de
+ 
+fora
+ 
+para
+ 
+dentro:
+ 
+as
+ 
+camadas
+ 
+externas
+ 
+(Frameworks
+ 
+e
+ 
+Interface
+ 
+Adapters)
+ 
+dependem
+ 
+das
+ 
+internas
+ 
+(Use
+ 
+Cases
+ 
+e
+ 
+Entities),
+ 
+nunca
+ 
+o
+ 
+contrário.
+ 
+  Figura  1  —  Diagrama  arquitetural  do  Sistema  de  Gestão  Acadêmica  (Clean  Architecture).
+ 
+9.  Requisitos  Arquiteturais  da  Solução  
+Esta  seção  analisa  como  a  Clean  Architecture  atende  aos  principais  requisitos  arquiteturais  do  
+Sistema
+ 
+de
+ 
+Gestão
+ 
+Acadêmica.
+ 
+Para
+ 
+cada
+ 
+requisito,
+ 
+são
+ 
+avaliadas
+ 
+sua
+ 
+relevância
+ 
+para
+ 
+o
+ 
+projeto,
+ 
+onde
+ 
+se
+ 
+manifesta
+ 
+no
+ 
+sistema,
+ 
+como
+ 
+a
+ 
+arquitetura
+ 
+o
+ 
+favorece
+ 
+ou
+ 
+limita
+ 
+e
+ 
+como
+ 
+deve
+ 
+estar
+ 
+repre
+  
+Requisito  Arquitetural  
+É  importante  para  o  sistema?  Por  quê?  
+Onde  aparece  no  sistema?  
+Como  a  arquitetura  ajuda  ou  limita?  
+Como  isso  deve  aparecer  na  solução?  
+
+
+--- Página 7 ---
+Manutenibilidade  Sim.  As  regras  acadêmicas  podem  mudar  com  frequência,  como  cálculo  de  média,  frequência  e  matrícula.  
+Regras  de  aprovação,  notas,  frequência  e  disciplinas.  
+A  Clean  Architecture  facilita  manutenção  ao  separar  regras  de  negócio  das  partes  técnicas.  
+Separação  em  camadas  independentes  e  organização  clara  do  código.  
+Modularidade  /  Baixo  acoplamento  
+Sim.  O  sistema  possui  funcionalidades  diferentes  que  precisam  evoluir  sem  afetar  todo  o  projeto.  
+Módulos  de  matrícula,  notas,  histórico  e  usuários.  
+A  arquitetura  reduz  dependência  direta  entre  camadas.  
+Cada  módulo  deve  possuir  responsabilidades  bem  definidas.  
+Testabilidade  Sim.  As  regras  acadêmicas  precisam  ser  validadas  com  segurança.  
+Cálculo  de  média,  aprovação  e  validação  de  matrícula.  
+O  domínio  pode  ser  testado  sem  depender  de  banco  ou  interface.  
+Testes  unitários  das  regras  de  negócio.  
+Segurança  Sim.  O  sistema  possui  diferentes  tipos  de  usuários  e  dados  acadêmicos.  
+Login,  permissões  de  professor,  aluno  e  coordenação.  
+A  arquitetura  permite  separar  autenticação  das  regras  de  negócio.  
+Controle  de  acesso  por  perfil  e  autenticação  de  usuários.  
+Desempenho  Moderadamente  importante.  O  sistema  precisa  responder  de  forma  adequada  para  consultas  e  lançamentos.  
+Consulta  de  histórico,  notas  e  disciplinas.  
+A  arquitetura  não  melhora  desempenho  diretamente,  mas  mantém  organização  para  otimizações  futuras.  
+Consultas  simples  e  estrutura  organizada  de  acesso  aos  dados.  
+Escalabilidade  Parcialmente  importante.  O  sistema  pode  crescer  em  funcionalidades  futuramente.  
+Inclusão  de  novos  módulos  e  funcionalidades  acadêmicas.  
+A  separação  em  camadas  facilita  expansão  do  sistema.  
+Estrutura  preparada  para  novos  módulos  sem  alterar  o  núcleo.  
+
+--- Página 8 ---
+Disponibilidade  /  Confiabilidade  
+Sim.  O  sistema  precisa  manter  consistência  das  informações  acadêmicas.  
+Notas,  frequência,  histórico  e  matrícula.  
+O  isolamento  das  regras  reduz  risco  de  erros  em  mudanças  futuras.  
+Validação  consistente  das  regras  acadêmicas  e  persistência  correta  dos  dados.  
+Integração  /  Interoperabilidade  
+Parcialmente  importante.  O  sistema  pode  futuramente  integrar  APIs  ou  outros  sistemas  acadêmicos.  
+APIs  externas,  exportação  de  dados  e  autenticação.  
+A  camada  de  infraestrutura  facilita  futuras  integrações  sem  alterar  o  domínio.  
+APIs  e  serviços  externos  isolados  da  lógica  de  negócio.  
+ 
+10.  Riscos  Arquiteturais  e  Trade-offs  da  Solução  
+10.1  Riscos  Arquiteturais  Esta  seção  identifica  os  principais  riscos  que  podem  comprometer  a  implementação,  
+manutenção
+ 
+ou
+ 
+evolução
+ 
+do
+ 
+sistema
+ 
+caso
+ 
+não
+ 
+sejam
+ 
+tratados
+ 
+desde
+ 
+o
+ 
+início.
+   
+Risco  arquitetural  Por  que  isso  pode  ser  um  problema?  
+Como  o  grupo  pretende  reduzir  esse  risco?  
+Regras  acadêmicas  fora  do  domínio  
+Regras  de  matrícula,  média  ou  frequência  podem  acabar  sendo  implementadas  nos  controllers,  dificultando  manutenção  futura.  
+Centralizar  as  regras  acadêmicas  na  camada  de  domínio  da  aplicação.  
+Excesso  de  separação  para  um  projeto  acadêmico  
+A  quantidade  de  camadas  pode  aumentar  a  complexidade  inicial  do  sistema.  
+Utilizar  apenas  as  camadas  necessárias  para  o  escopo  do  projeto  acadêmico.  
+
+--- Página 9 ---
+      
+10.2  Trade-offs  da  Arquitetura  Escolhida  Todo  trade-off  arquitetural  representa  uma  decisão  consciente:  a  Clean  Architecture  favorece  
+determinados
+ 
+atributos
+ 
+de
+ 
+qualidade
+ 
+em
+ 
+detrimento
+ 
+de
+ 
+outros.
+ 
+A
+ 
+seguir,
+ 
+os
+ 
+cinco
+ 
+principais
+ 
+trade-offs
+ 
+identificados
+ 
+para
+ 
+este
+ 
+projeto.
+  
+Trade-off  O  que  a  arquitetura  favorece?  
+O  que  ela  pode  dificultar?  
+Como  o  grupo  pretende  lidar  com  essa  limitação?  
+1.  Separação  das  regras  acadêmicas  
+Isolamento  de  regras  como  cálculo  de  média  e  frequência.  
+Estrutura  inicial  mais  complexa.  
+Definir  organização  clara  das  camadas  desde  o  início.  
+2.  Independência  do  banco  de  dados  
+Possibilidade  de  trocar  PostgreSQL  ou  MySQL  sem  alterar  regras  acadêmicas.  
+Necessidade  de  criar  camada  de  acesso  aos  dados.  
+Manter  repositórios  simples  e  focados  apenas  em  persistência.  
+3.  Testes  isolados  do  domínio  
+Validar  matrícula,  notas  e  aprovação  sem  interface  gráfica.  
+Maior  tempo  inicial  para  estruturar  testes.  
+Priorizar  testes  das  funcionalidades  acadêmicas  principais.  
+4.  Baixo  acoplamento  entre  módulos  
+Facilita  evolução  de  módulos  como  notas,  histórico  e  disciplinas.  
+Maior  quantidade  de  arquivos  e  separações.  
+Padronizar  nomenclatura  e  estrutura  do  projeto.  
+5.  Facilidade  de  expansão  futura  
+Inclusão  de  novos  módulos  sem  alterar  o  núcleo  do  sistema.  
+Pode  parecer  excessivo  para  funcionalidades  simples.  
+Aplicar  a  arquitetura  apenas  nas  partes  centrais  do  sistema.  
+ 
+Dependência  incorreta  entre  camadas  
+Controllers  ou  infraestrutura  podem  acabar  acessando  regras  internas  diretamente.  
+Seguir  a  estrutura  da  Clean  Architecture  e  manter  o  fluxo  de  dependência  voltado  para  o  núcleo.  
+
+
+==================== LENDO: projeto_arquitetura_software.pdf ====================
+Total de páginas: 7
+
+--- Página 1 ---
+PROJETO PRINCIPAL DA DISCIPLINA 
+Arquitetura de Software 
+Orientações gerais do trabalho prático incremental 
+ 
+Curso Engenharia de Software 
+Disciplina Arquitetura de Software 
+Período 1º semestre de 2026 
+Professor Philipe Fransozi 
+Composição da nota do trabalho TP1 = 1,0 | TP2 = 3,0 | TP3 = 1,0 
+Valor total do trabalho 5,0 pontos 
+1. Apresentação do trabalho 
+Após a etapa da prova da disciplina, os estudantes desenvolverão um trabalho prático incremental, 
+realizado em grupo, com valor total de 5,0 pontos. O trabalho tem como objetivo permitir que o 
+grupo aplique, de forma integrada, os conteúdos estudados ao longo do semestre, especialmente 
+no que se refere à escolha de uma arquitetura de software, à organização da solução, à 
+modularização, à separação de responsabilidades, ao uso de princípios de POO, à relação com 
+SOLID e à futura implementação coerente da proposta. 
+O projeto deverá resultar em uma aplicação de pequeno porte. O foco principal da avaliação não 
+está na complexidade do domínio, na sofisticação da interface ou na quantidade de 
+funcionalidades, mas sim na qualidade da proposta arquitetural, na coerência da decomposição do 
+sistema e na capacidade do grupo de justificar e defender tecnicamente as decisões tomadas. 
+2. Estrutura do trabalho 
+O trabalho será dividido em três etapas: 
+ TP1 — Especificação arquitetural: 1,0 ponto 
+ TP2 — Implementação arquitetural: 3,0 pontos 
+ TP3 — Prova de autoria / defesa: 1,0 ponto 
+As etapas são encadeadas. Assim, a implementação do TP2 deverá respeitar e concretizar as 
+decisões arquiteturais definidas no TP1, e a prova de autoria do TP3 deverá demonstrar que o 
+grupo compreende, de fato, a solução proposta e implementada. 
+3. O que o grupo deverá fazer 
+ Escolher um problema de software viável para uma aplicação de pequeno porte. 
+ Selecionar uma arquitetura de software de alto nível adequada ao problema. 
+ Justificar tecnicamente a arquitetura escolhida. 
+ Produzir uma especificação arquitetural inicial da solução. 
+ Implementar uma versão coerente da arquitetura proposta. 
+ Defender oralmente as decisões do projeto e demonstrar autoria sobre a solução desenvolvida. 
+4. Arquiteturas elegíveis 
+
+--- Página 2 ---
+Cada grupo deverá escolher uma das arquiteturas abaixo como base principal do projeto: 
+ Monolítica 
+ Em camadas 
+ Cliente-servidor 
+ Hexagonal 
+ Microsserviços 
+ Orientada a eventos 
+ Clean Architecture 
+ Onion Architecture 
+ Serverless 
+Observação importante: a escolha da arquitetura deve ser coerente com o problema proposto. Não 
+basta utilizar o nome de uma arquitetura; o grupo deverá mostrar, ao longo do trabalho, que 
+compreendeu suas características e que organizou a solução de forma compatível com ela. 
+5. Observações sobre a escolha da arquitetura 
+A arquitetura escolhida não deve ser tratada de forma estereotipada ou simplista. Em especial, é 
+importante considerar os seguintes pontos: 
+ Arquitetura monolítica não significa, necessariamente, sistema simples. Há sistemas 
+monolíticos robustos, amplos e tecnicamente bem estruturados. 
+ Mesmo em uma arquitetura monolítica, o sistema não pode ser “bagunçado”: espera-se 
+modularização interna, separação clara de responsabilidades, boa organização por módulos e 
+dependências controladas. 
+ Arquiteturas mais sofisticadas, como microsserviços, hexagonal, clean ou onion, não devem ser 
+escolhidas apenas por parecerem “mais modernas”. A adoção precisa fazer sentido para o 
+escopo do projeto. 
+ Uma arquitetura tecnicamente bem aplicada em um projeto pequeno vale mais do que uma 
+arquitetura “da moda” usada de forma superficial ou incoerente. 
+6. Sugestões de adequação entre tipo de sistema e arquitetura 
+Arquitetura Quando pode fazer sentido Observações importantes Exemplo moderno de produto/serviço 
+Monolítica Quando o grupo deseja centralizar 
+a solução em uma única 
+aplicação, com implantação 
+unificada e evolução coordenada. 
+Pode servir tanto para sistemas 
+pequenos quanto para sistemas 
+de porte moderado, desde que 
+haja boa organização interna. 
+Mesmo sendo monolítica, a 
+solução deve apresentar 
+modularização interna, 
+separação de 
+responsabilidades e estrutura 
+clara. 
+ERP escolar/SaaS interno modular 
+em um único deploy, reunindo 
+matrícula, notas, financeiro e 
+comunicação. 
+Em camadas Quando o problema permite 
+separação nítida entre 
+apresentação, lógica de negócio e 
+acesso a dados. 
+É importante evitar que as 
+camadas virem apenas uma 
+divisão superficial de pastas. 
+As responsabilidades devem 
+estar realmente separadas. 
+E-commerce moderno com interface 
+web/mobile, serviços de negócio e 
+persistência em banco de dados. 
+Cliente-servidor Quando a solução envolve 
+interação entre front-end/cliente e 
+back-end/servidor. 
+O grupo deve deixar claro o 
+papel de cada lado e como 
+ocorre a comunicação. 
+App de delivery, mobilidade ou 
+reservas, no qual o aplicativo 
+consome uma API no servidor. 
+
+--- Página 3 ---
+Arquitetura Quando pode fazer sentido Observações importantes Exemplo moderno de produto/serviço 
+Hexagonal Quando se deseja isolar o núcleo 
+da aplicação em relação a banco, 
+interface, APIs externas e outros 
+mecanismos de entrada/saída. 
+O foco deve estar em portas, 
+adaptadores e independência 
+do núcleo de negócio. 
+Plataforma de pagamentos/Pix com 
+núcleo de regras isolado e 
+adaptadores para banco, antifraude e 
+notificações. 
+Microsserviços Quando há justificativa clara para 
+separar responsabilidades em 
+serviços independentes. 
+Não é recomendado usar 
+apenas para “parecer 
+moderno”. A divisão deve ser 
+tecnicamente justificável e 
+viável para o escopo do 
+projeto. 
+Marketplace ou streaming estilo 
+Mercado Livre, Netflix ou Spotify, com 
+serviços separados para catálogo, 
+usuários, pagamentos e 
+recomendações. 
+Orientada a 
+eventos 
+Quando o sistema possui fluxo 
+baseado em publicação, reação a 
+eventos ou comunicação 
+assíncrona entre partes. 
+O grupo deve explicitar os 
+eventos, produtores, 
+consumidores e o impacto 
+disso na solução. 
+Rastreamento de pedidos em tempo 
+real, notificações de entrega ou 
+processamento de compra por 
+eventos. 
+Clean Architecture Quando se deseja forte separação 
+entre regras de negócio e 
+detalhes de infraestrutura, com 
+dependências apontando para 
+dentro. 
+É necessário deixar clara a 
+divisão entre entidades, casos 
+de uso, interfaces e 
+adaptadores. 
+API moderna de tarefas, fintech ou 
+sistema acadêmico com casos de uso 
+independentes de banco e interface. 
+Onion Architecture Quando se deseja organizar a 
+aplicação em torno de um núcleo 
+de domínio cercado por camadas 
+com dependências dirigidas ao 
+centro. 
+A justificativa deve mostrar a 
+relação entre domínio, serviços 
+e infraestrutura. 
+Sistema bancário ou fintech com 
+domínio financeiro no núcleo, como 
+conta, transação, limite e crédito. 
+Serverless Quando o problema pode ser 
+resolvido por funções ou serviços 
+acionados sob demanda, 
+geralmente integrados a serviços 
+gerenciados. 
+A proposta deve mostrar 
+gatilhos, funções e serviços 
+envolvidos, sem perder a 
+clareza da organização lógica. 
+Processamento automático de 
+imagens/vídeos após upload em 
+nuvem ou chatbot acionado por 
+eventos. 
+7. TP1 — Especificação arquitetural (1,0 ponto) 
+Nesta primeira etapa, o grupo deverá produzir um documento de especificação arquitetural inicial. 
+Ainda não é necessário implementar o sistema de forma completa. O objetivo é demonstrar a 
+capacidade de analisar o problema, escolher uma arquitetura de alto nível, justificar tecnicamente 
+essa escolha e propor uma organização inicial coerente para a futura implementação. 
+7.1 O que se espera de entrega no TP1 
+Espera-se que o grupo entregue um documento único de especificação arquitetural contendo a 
+proposta inicial do sistema. Esse documento deve permitir compreender qual sistema será 
+desenvolvido, por que a arquitetura foi escolhida, como a solução será organizada e quais decisões 
+deverão orientar a implementação no TP2. 
+ Documento único, organizado em seções, reunindo todos os itens solicitados no TP1. 
+ Descrição objetiva da aplicação, do problema atendido e dos usuários principais. 
+ Indicação da arquitetura escolhida e justificativa técnica da escolha. 
+ Decomposição inicial da solução em módulos, camadas, componentes, serviços ou partes 
+equivalentes, conforme a arquitetura adotada. 
+ Diagrama arquitetural obrigatório, preferencialmente um diagrama de componentes UML, 
+podendo ser complementado por uma visão C4. 
+ Indicação de como a proposta se relaciona com modularização, POO, SOLID e possíveis 
+padrões de projeto. 
+ Delimitação do escopo mínimo que será implementado no TP2. 
+
+--- Página 4 ---
+Nesta etapa, não se espera a implementação completa do sistema. O essencial é que a 
+especificação seja clara, coerente e suficientemente implementável para orientar o 
+desenvolvimento do TP2. 
+7.2 Elementos obrigatórios do TP1 
+1. Descrição da aplicação: apresentação breve do problema, do contexto de uso, do objetivo geral 
+e dos usuários principais do sistema. 
+2. Arquitetura escolhida: indicação explícita da arquitetura de alto nível adotada pelo grupo. 
+3. Justificativa da escolha: explicação dos motivos que levaram à escolha da arquitetura, 
+considerando modularização, separação de responsabilidades, manutenção, evolução, clareza 
+estrutural e aderência ao problema. 
+4. Requisitos e escopo inicial: definição resumida das principais funcionalidades e delimitação do 
+que será implementado no projeto. 
+5. Decomposição do sistema: definição dos principais módulos, camadas, componentes ou 
+serviços da aplicação. 
+6. Relação com POO e SOLID: explicação de como a arquitetura favorece abstração, 
+encapsulamento, interfaces, composição e princípios SOLID. 
+7. Padrões de projeto compatíveis: indicação de padrões de projeto que podem aparecer na 
+solução, com breve justificativa. 
+8. Visão da arquitetura por meio de diagrama: inclusão de ao menos um diagrama que represente 
+a organização arquitetural proposta. 
+7.3 Diagrama arquitetural no TP1 
+O TP1 deverá incluir uma visão arquitetural representada por diagrama. Para esta disciplina, o 
+formato mais recomendado é o diagrama de componentes (UML), por ser um dos mais tradicionais 
+e comuns na área para representar módulos, camadas, componentes e suas relações de 
+dependência ou comunicação. 
+Opcionalmente, o grupo também poderá complementar a especificação com uma visão inspirada 
+no modelo C4, especialmente com diagramas de contexto ou de contêineres, desde que isso 
+contribua para tornar a proposta mais clara. No entanto, para fins de padronização da atividade, 
+recomenda-se que pelo menos um diagrama de componentes esteja presente no documento. 
+O diagrama não precisa ser excessivamente detalhado, mas deve permitir visualizar: 
+ os principais blocos da solução; 
+ as responsabilidades gerais de cada bloco; 
+ as relações entre as partes do sistema; 
+ o fluxo principal de comunicação ou dependência entre os elementos arquiteturais. 
+7.4 Diretrizes de qualidade para o TP1 
+ A descrição do problema deve ser objetiva e coerente com o porte da disciplina. 
+ A arquitetura escolhida deve ser claramente identificável no documento. 
+ A justificativa técnica deve mostrar entendimento real da arquitetura, e não apenas uma 
+descrição genérica. 
+
+--- Página 5 ---
+ A decomposição do sistema deve refletir separação de responsabilidades. 
+ O diagrama deve ser legível e compatível com a organização textual apresentada. 
+ Deve existir coerência entre problema, arquitetura, módulos e futura implementação. 
+8. TP2 — Implementação arquitetural (3,0 pontos) 
+Nesta etapa, o grupo deverá implementar uma versão funcional da solução, respeitando a proposta 
+arquitetural definida no TP1. Não se espera um sistema grande, mas sim uma implementação 
+coerente com a arquitetura escolhida e com os princípios discutidos ao longo da disciplina. 
+8.1 O que será esperado no TP2 
+ Implementação de uma versão funcional do sistema proposto. 
+ Organização do código compatível com a arquitetura escolhida. 
+ Presença de módulos, camadas, componentes ou serviços coerentes com a especificação 
+arquitetural. 
+ Aplicação de boas práticas de encapsulamento, abstração e separação de responsabilidades. 
+ Uso de interfaces, contratos ou abstrações quando fizer sentido para a arquitetura. 
+ Implementação de um conjunto mínimo de funcionalidades que permita demonstrar a proposta 
+do grupo. 
+ Coerência entre a decomposição apresentada no TP1 e a estrutura efetivamente implementada 
+no código. 
+8.2 O que terá mais peso na avaliação do TP2 
+ Coerência arquitetural da implementação. 
+ Qualidade da modularização. 
+ Separação de responsabilidades entre classes, componentes, camadas ou serviços. 
+ Clareza estrutural do código. 
+ Uso apropriado de conceitos de POO aplicada à arquitetura. 
+ Aplicação consistente de princípios SOLID, quando pertinente. 
+ Uso compatível de padrões de projeto, quando pertinente. 
+Observação: a avaliação do TP2 não prioriza interface bonita, grande volume de funcionalidades 
+ou domínio complexo. Um projeto menor, mas tecnicamente coerente, tende a ser mais bem 
+avaliado do que um projeto maior e estruturalmente confuso. 
+9. TP3 — Prova de autoria / defesa (1,0 ponto) 
+Na etapa final, o grupo realizará uma prova de autoria / defesa do projeto. O objetivo é verificar se 
+os integrantes realmente compreendem a solução desenvolvida, as decisões arquiteturais 
+adotadas e a implementação produzida. 
+9.1 O que poderá ser solicitado na defesa 
+ Explicar o problema escolhido e o objetivo do sistema. 
+ Justificar a arquitetura adotada. 
+
+--- Página 6 ---
+ Apresentar os principais módulos, camadas, componentes ou serviços. 
+ Explicar o papel das principais classes, interfaces e dependências. 
+ Mostrar como a implementação reflete a arquitetura do TP1. 
+ Apontar onde aparecem conceitos de modularização, POO, SOLID e padrões de projeto. 
+ Realizar demonstração básica do funcionamento da aplicação. 
+ Responder perguntas específicas feitas pelo professor sobre o código e sobre a arquitetura. 
+9.2 Critério de autoria 
+A prova de autoria poderá ser feita com participação individual dos integrantes. Assim, cada 
+estudante deverá ser capaz de explicar ao menos parte relevante do projeto. Caso fique evidente 
+que um integrante não domina minimamente a solução entregue, isso poderá impactar sua 
+avaliação nesta etapa. 
+10. Critérios gerais de avaliação 
+Os critérios abaixo orientam a avaliação do trabalho como um todo: 
+ Coerência entre o problema proposto e a arquitetura escolhida. 
+ Qualidade da justificativa técnica. 
+ Clareza da decomposição do sistema. 
+ Separação de responsabilidades. 
+ Consistência entre especificação e implementação. 
+ Capacidade de relacionar a arquitetura com conceitos de POO aplicada à arquitetura. 
+ Uso adequado de abstrações, interfaces, composição e encapsulamento. 
+ Identificação e uso compatível de padrões de projeto. 
+ Análise de como a arquitetura favorece ou dificulta a aplicação de princípios SOLID. 
+ Capacidade de defender tecnicamente as decisões tomadas. 
+11. Rubrica resumida por etapa 
+Etapa Valor Aspectos centrais 
+TP1 — Especificação 
+arquitetural 
+1,0 Escolha e justificativa da 
+arquitetura; decomposição do 
+sistema; clareza da proposta; 
+diagrama arquitetural; relação 
+com POO, SOLID e padrões. 
+TP2 — Implementação 
+arquitetural 
+3,0 Coerência entre arquitetura e 
+código; organização estrutural; 
+responsabilidades; 
+implementação compatível 
+com a proposta. 
+TP3 — Prova de autoria / 
+defesa 
+1,0 Domínio do projeto; 
+capacidade de explicar 
+decisões; demonstração de 
+autoria e entendimento da 
+implementação. 
+ 
+
+--- Página 7 ---
+[Página sem texto extraível ou digitalizada como imagem]
+
+
+==================== LENDO: TP2_Sprint3_Consolidacao_Arquitetural (1).pdf ====================
+Total de páginas: 3
+
+--- Página 1 ---
+TP2 - Sprint 3 | Consolidação Arquitetural 
+Engenharia de Software - Arquitetura de Software 
+TP2 - Sprint 3 
+Consolidação Arquitetural e Evolução do Sistema 
+Nesta sprint, a evolução funcional deve estar acompanhada de evolução arquitetural. O grupo 
+deve demonstrar coerência entre documento de engenharia, código-fonte, responsabilidades, 
+camadas e decisões de projeto. 
+ 
+1. Objetivo 
+Na Sprint 3, cada grupo deverá evoluir a implementação iniciada nas Sprints 1 e 2, consolidando a 
+arquitetura escolhida no documento de engenharia do projeto. 
+O foco desta sprint não é apenas adicionar novas funcionalidades, mas demonstrar que o sistema está cada 
+vez mais aderente às decisões arquiteturais assumidas pelo grupo, aos princípios discutidos em aula e aos 
+pontos de melhoria identificados durante a avaliação arquitetural da Sprint 2. 
+Cada equipe deve reler seu documento de engenharia e verificar se a implementação atual realmente 
+respeita os princípios, padrões, camadas, responsabilidades e atributos de qualidade definidos inicialmente. 
+2. Orientações Gerais 
+Cada grupo deverá: 
+1. Evoluir o sistema mantendo coerência com a arquitetura escolhida no documento de engenharia. 
+2. Corrigir ou melhorar pontos arquiteturais frágeis identificados nas entregas anteriores, especialmente 
+relacionados a: 
+• baixo acoplamento; 
+• alta coesão; 
+• separação clara de responsabilidades; 
+• localização correta das regras de negócio; 
+• uso adequado de interfaces, contratos, portas, serviços, casos de uso ou camadas; 
+• aderência aos padrões arquiteturais propostos; 
+• consistência entre documentação e código. 
+3. Implementar pelo menos duas novas funcionalidades relevantes do domínio do sistema. 
+4. A nova funcionalidade deve atravessar a arquitetura proposta pelo grupo, contendo: 
+• entrada verificável; 
+• processamento; 
+• regra de negócio; 
+• acesso ou manipulação de dados (pode ser mock, fake); 
+• saída observável; 
+• documentação do fluxo arquitetural. 
+5. Revisar funcionalidades já entregues nas Sprints 1 e 2, evitando que novas implementações aumentem 
+o acoplamento, dupliquem responsabilidades ou coloquem regra de negócio em camadas 
+inadequadas. 
+6. Atualizar a documentação do projeto, deixando claro: 
+• o que foi implementado na Sprint 3; 
+• quais pontos da arquitetura foram melhorados; 
+• qual fluxo arquitetural a nova funcionalidade percorre; 
+
+--- Página 2 ---
+TP2 - Sprint 3 | Consolidação Arquitetural 
+Engenharia de Software - Arquitetura de Software 
+• quais componentes participam do fluxo; 
+• como executar e testar a funcionalidade; 
+• quais decisões arquiteturais foram mantidas ou ajustadas. 
+3. Relação com o Documento de Engenharia 
+A Sprint 3 será avaliada considerando a aderência da implementação ao documento de engenharia 
+produzido pelo grupo. 
+Portanto, cada equipe deve verificar se o código entregue está coerente com: 
+• a arquitetura escolhida; 
+• os módulos, camadas ou serviços previstos; 
+• os padrões de projeto mencionados; 
+• os atributos de qualidade declarados; 
+• as responsabilidades atribuídas a cada parte do sistema; 
+• os fluxos de negócio mais importantes do domínio. 
+4. Entregáveis 
+A entrega da Sprint 3 deverá conter: 
+1. Código-fonte atualizado. 
+2. Nova funcionalidade implementada e executável. 
+3. Melhorias arquiteturais aplicadas sobre o código existente. 
+4. README atualizado com uma seção chamada: 
+Descrição das implementações e evolução arquitetural - Sprint 3 
+5. Nessa seção, o grupo deve descrever: 
+• funcionalidade implementada; 
+• fluxo arquitetural; 
+• componentes envolvidos; 
+• regra de negócio implementada; 
+• mecanismo de persistência ou integração utilizado; 
+• exemplos de entrada e saída; 
+• melhorias arquiteturais realizadas em relação à Sprint 2. 
+6. Testes automatizados. 
+5. Critérios de Avaliação 
+A avaliação considerará: 
+• aderência à arquitetura definida no documento de engenharia; 
+• clareza na separação de responsabilidades; 
+• baixo acoplamento entre módulos, camadas ou serviços; 
+• alta coesão dos componentes; 
+• regras de negócio localizadas na camada adequada; 
+• uso consistente dos padrões arquiteturais propostos; 
+• completude da nova funcionalidade; 
+• evolução real em relação à Sprint 2; 
+
+--- Página 3 ---
+TP2 - Sprint 3 | Consolidação Arquitetural 
+Engenharia de Software - Arquitetura de Software 
+6. Observação Importante 
+A Sprint 3 não deve ser tratada apenas como uma etapa de expansão funcional. O principal objetivo é 
+mostrar que o sistema está evoluindo de forma arquiteturalmente consciente. 
+Cada grupo deve demonstrar que compreende a própria arquitetura, sabe identificar fragilidades na 
+implementação atual e consegue evoluir o código respeitando os princípios discutidos ao longo da 
+disciplina.  
+
