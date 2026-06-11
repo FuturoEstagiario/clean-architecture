@@ -5,3 +5,7 @@ class IAlunoRepository(ABC):
     @abstractmethod
     def salvar(self, aluno: Aluno) -> None:
         pass
+
+    @abstractmethod
+    def buscar_por_matricula(self, matricula: str) -> Aluno | None:
+        pass
