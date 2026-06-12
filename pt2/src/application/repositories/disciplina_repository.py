@@ -9,3 +9,7 @@ class IDisciplinaRepository(ABC):
     @abstractmethod
     def buscar_por_codigo(self, codigo: str) -> Disciplina | None:
         pass
+
+    @abstractmethod
+    def listar(self) -> list[Disciplina]:
+        pass

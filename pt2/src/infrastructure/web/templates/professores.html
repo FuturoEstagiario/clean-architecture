@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Professores{% endblock %}
+{% block content %}
+<section class="module">
+    <h2>Professores</h2>
+    <div class="grid">
+        <div class="card">
+            <div class="card-header">
+                <span class="method POST">POST</span>
+                <span class="endpoint">/api/professores</span>
+            </div>
+            <p class="desc">Cadastra um novo professor no sistema.</p>
+            <label>Registro</label><input id="p_reg" placeholder="ex: P001">
+            <label>Nome</label><input id="p_nom" placeholder="ex: Philipe Fransozi">
+            <button class="btn-post" onclick="post('/api/professores',{registro:v('p_reg'),nome:v('p_nom')},'r_prof')">Cadastrar Professor</button>
+            <div class="result" id="r_prof"></div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <span class="method GET">GET</span>
+                <span class="endpoint">/api/professores</span>
+            </div>
+            <p class="desc">Lista os professores cadastrados.</p>
+            <button class="btn-get" onclick="listar('/api/professores','t_professores',['registro','nome'])">Atualizar Lista</button>
+            <table>
+                <thead><tr><th>Registro</th><th>Nome</th></tr></thead>
+                <tbody id="t_professores"></tbody>
+            </table>
+        </div>
+    </div>
+</section>
+<script>document.addEventListener('DOMContentLoaded', () => listar('/api/professores','t_professores',['registro','nome']));</script>
+{% endblock %}

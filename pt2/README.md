@@ -57,10 +57,33 @@
 
 ---
 
+### 4. Evolução pós-Sprint 3 — Modularização Web, Novos Módulos e Autenticação
+
+#### A. Interface Web Modular (Blueprints + páginas por módulo)
+* Cada módulo (Alunos, Professores, Disciplinas, Matrículas, Notas, Frequências, Desempenho) possui um Blueprint próprio em `src/infrastructure/web/routes/` e uma página própria com layout comum (`base.html` + sidebar). Páginas HTML em `/alunos`, `/professores`, ...; API JSON em `/api/alunos`, `/api/professores`, ...
+* O `Container` continua único (Composition Root), anexado ao app e acedido via `current_app`.
+
+#### B. Listagens (GET)
+* **Fluxo**: rota GET -> controller -> use case (`ListarAlunos`, `ListarDisciplinas`, `ListarMatriculas`, `ListarProfessores`) -> interface -> repositório SQLite.
+* **Saída**: `{"status": "sucesso", "dados": [...]}` renderizado em tabela na página do módulo.
+
+#### C. Cadastrar/Listar Professor
+* **Componentes**: `professor_routes.py` -> `professor_controller.py` -> `cadastrar_professor.py` / `listar_professores.py` -> `Professor` (Entity) -> `IProfessorRepository` -> `sqlite_professor_repository.py` (tabela `professores`).
+* **Regra de Negócio**: registro e nome obrigatórios (validados na entidade).
+* **Exemplo**: POST `/api/professores` com `{"registro": "P001", "nome": "Philipe Fransozi"}`.
+
+#### D. Autenticação de Usuários (escopo mínimo do TP1)
+* **Componentes**: `auth_routes.py` -> `auth_controller.py` -> `AutenticarUsuario` (Use Case) -> `Usuario` (Entity, perfis aluno/professor/admin) -> portas `IUsuarioRepository` e `IPasswordHasher` -> adaptadores `sqlite_usuario_repository.py` e `werkzeug_password_hasher.py`.
+* **Regras de Negócio**: senha armazenada como hash; mensagem única para login/senha inválidos (evita enumeração de usuários); senha mínima de 6 caracteres; login único.
+* **Proteção global**: `before_request` em `app.py` — páginas redirecionam para `/login`, chamadas `/api/...` recebem 401 sem sessão ativa.
+* **Usuário inicial**: criado automaticamente `admin` / `admin123` (trocar em produção).
+
+---
+
 ## Estrutura de Pastas Completa
 ```
 pt2/
-├── demo_academico.db      # Banco de dados SQLite gerado na demonstração
+├── academico.db           # Banco de dados SQLite (gerado na execução)
 ├── README.md              # Este arquivo
 ├── src/
 │   ├── __init__.py
@@ -71,7 +94,9 @@ pt2/
 │   │   │   ├── disciplina.py
 │   │   │   ├── frequencia.py
 │   │   │   ├── matricula.py
-│   │   │   └── nota.py
+│   │   │   ├── nota.py
+│   │   │   ├── professor.py
+│   │   │   └── usuario.py
 │   ├── application/
 │   │   ├── dtos/
 │   │   │   └── desempenho_dto.py
@@ -80,36 +105,58 @@ pt2/
 │   │   │   ├── disciplina_repository.py
 │   │   │   ├── frequencia_repository.py
 │   │   │   ├── matricula_repository.py
-│   │   │   └── nota_repository.py
+│   │   │   ├── nota_repository.py
+│   │   │   ├── professor_repository.py
+│   │   │   └── usuario_repository.py
+│   │   ├── services/
+│   │   │   └── password_hasher.py
 │   │   ├── use_cases/
+│   │   │   ├── autenticar_usuario.py
 │   │   │   ├── cadastrar_aluno.py
 │   │   │   ├── cadastrar_disciplina.py
+│   │   │   ├── cadastrar_professor.py
+│   │   │   ├── cadastrar_usuario.py
 │   │   │   ├── consultar_desempenho.py
 │   │   │   ├── lancar_frequencia.py
-│   │   │   └── lancar_nota.py
+│   │   │   ├── lancar_nota.py
+│   │   │   ├── listar_alunos.py
+│   │   │   ├── listar_disciplinas.py
+│   │   │   ├── listar_matriculas.py
+│   │   │   ├── listar_professores.py
+│   │   │   └── matricular_aluno.py
 │   ├── interface_adapters/
 │   │   ├── controllers/
 │   │   │   ├── aluno_controller.py
+│   │   │   ├── auth_controller.py
 │   │   │   ├── desempenho_controller.py
 │   │   │   ├── disciplina_controller.py
 │   │   │   ├── frequencia_controller.py
 │   │   │   ├── matricula_controller.py
-│   │   │   └── nota_controller.py
+│   │   │   ├── nota_controller.py
+│   │   │   └── professor_controller.py
 │   │   ├── presenters/
 │   │   │   └── desempenho_presenter.py
 │   │   ├── repositories_impl/
+│   │   │   ├── memory_aluno_repository.py
 │   │   │   ├── sqlite_aluno_repository.py
 │   │   │   ├── sqlite_disciplina_repository.py
 │   │   │   ├── sqlite_frequencia_repository.py
 │   │   │   ├── sqlite_matricula_repository.py
-│   │   │   └── sqlite_nota_repository.py
+│   │   │   ├── sqlite_nota_repository.py
+│   │   │   ├── sqlite_professor_repository.py
+│   │   │   └── sqlite_usuario_repository.py
 │   ├── infrastructure/
 │   │   ├── database/
 │   │   │   └── sqlite_connection.py
 │   │   ├── di/
 │   │   │   └── container.py
+│   │   ├── security/
+│   │   │   └── werkzeug_password_hasher.py
 │   │   ├── web/
-│   │   │   └── app.py     # Servidor Web Flask
+│   │   │   ├── app.py             # App factory Flask + proteção de login
+│   │   │   ├── routes/            # Um Blueprint por módulo
+│   │   │   ├── static/            # style.css, app.js
+│   │   │   └── templates/         # base.html + uma página por módulo + login.html
 │   └── tests/
 │       └── test_use_cases.py
 ```
@@ -136,7 +183,9 @@ python -m src.main
 cd pt2
 python -m src.infrastructure.web.app
 ```
-O servidor rodará na porta `5000`. Você pode testar enviando requisições via cURL ou ferramentas como Postman.
+O servidor rodará na porta `5000`. Acesse `http://localhost:5000` no navegador — qualquer página redireciona para `/login`. Credenciais iniciais: **admin** / **admin123** (usuário criado automaticamente na primeira execução).
+
+A API JSON (`/api/...`) exige sessão autenticada: requisições sem login recebem `401`. Para testar via cURL/Postman, autentique-se primeiro em `POST /login` e reutilize o cookie de sessão.
 
 ### 4. Rodar Testes Automatizados
 ```bash

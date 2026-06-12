@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Notas{% endblock %}
+{% block content %}
+<section class="module">
+    <h2>Notas</h2>
+    <div class="grid">
+        <div class="card">
+            <div class="card-header">
+                <span class="method POST">POST</span>
+                <span class="endpoint">/api/notas</span>
+            </div>
+            <p class="desc">Lança nota de um aluno em uma disciplina.</p>
+            <div class="rule">⚠ Valor da nota: 0.0 a 10.0. Requer matrícula ativa.</div>
+            <label>Matrícula do Aluno</label><input id="n_alu" placeholder="ex: 2026001">
+            <label>Código da Disciplina</label><input id="n_dis" placeholder="ex: ARQ01">
+            <label>Valor (0–10)</label><input id="n_val" type="number" step="0.1" placeholder="ex: 9.5">
+            <label>Tipo de Avaliação</label><input id="n_tip" placeholder="ex: Trabalho 1">
+            <button class="btn-post" onclick="post('/api/notas',{aluno_matricula:v('n_alu'),disciplina_codigo:v('n_dis'),valor:parseFloat(v('n_val')),tipo_avaliacao:v('n_tip')},'r_nota')">Lançar Nota</button>
+            <div class="result" id="r_nota"></div>
+        </div>
+    </div>
+</section>
+{% endblock %}

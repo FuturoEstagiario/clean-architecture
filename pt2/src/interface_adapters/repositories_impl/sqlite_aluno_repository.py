@@ -28,3 +28,17 @@ class SQLiteAlunoRepository(IAlunoRepository):
             aluno.situacao = row["situacao"]
             return aluno
         return None
+
+    def listar(self) -> list[Aluno]:
+        conn = self.connection_manager.get_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT matricula, nome, situacao FROM alunos ORDER BY nome")
+        rows = cursor.fetchall()
+        conn.close()
+
+        alunos = []
+        for row in rows:
+            aluno = Aluno(row["matricula"], row["nome"])
+            aluno.situacao = row["situacao"]
+            alunos.append(aluno)
+        return alunos

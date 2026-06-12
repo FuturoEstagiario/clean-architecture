@@ -69,6 +69,21 @@ class SQLiteConnection:
                 FOREIGN KEY (aluno_matricula, disciplina_codigo) REFERENCES matriculas(aluno_matricula, disciplina_codigo) ON DELETE CASCADE
             );
         """)
-        
+
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS professores (
+                registro TEXT PRIMARY KEY,
+                nome TEXT NOT NULL
+            );
+        """)
+
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS usuarios (
+                login TEXT PRIMARY KEY,
+                senha_hash TEXT NOT NULL,
+                perfil TEXT NOT NULL
+            );
+        """)
+
         conn.commit()
         conn.close()

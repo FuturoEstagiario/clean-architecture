@@ -122,3 +122,51 @@ def test_fluxo_completo_desempenho_presenter(clean_container):
     assert "BOLETIM ACADÊMICO: Alice" in res_console
     assert "Média Final: 8.00" in res_console
     assert "Frequência: 16/20 aulas (80.0%)" in res_console
+
+def test_listar_alunos_ordenados_por_nome(clean_container):
+    clean_container.aluno_controller.cadastrar("2", "Bruno")
+    clean_container.aluno_controller.cadastrar("1", "Alice")
+
+    res = clean_container.aluno_controller.listar()
+    assert res["status"] == "sucesso"
+    assert [a["nome"] for a in res["dados"]] == ["Alice", "Bruno"]
+
+def test_listar_disciplinas_e_matriculas(clean_container):
+    clean_container.aluno_controller.cadastrar("1", "Alice")
+    clean_container.disciplina_controller.cadastrar("DISC1", "Programação", 60)
+    clean_container.matricula_controller.matricular("1", "DISC1")
+
+    assert clean_container.disciplina_controller.listar()["dados"][0]["codigo"] == "DISC1"
+    assert clean_container.matricula_controller.listar()["dados"][0]["aluno_matricula"] == "1"
+
+def test_cadastrar_e_listar_professor(clean_container):
+    res = clean_container.professor_controller.cadastrar("P001", "Philipe")
+    assert res["status"] == "sucesso"
+    assert clean_container.professor_controller.listar()["dados"][0]["registro"] == "P001"
+
+def test_professor_sem_nome_retorna_erro(clean_container):
+    res = clean_container.professor_controller.cadastrar("P002", "   ")
+    assert res["status"] == "erro"
+    assert "obrigatório" in res["mensagem"]
+
+def test_autenticar_usuario_valido(clean_container):
+    clean_container.cadastrar_usuario_use_case.executar("bruno", "segredo1", "professor")
+    res = clean_container.auth_controller.autenticar("bruno", "segredo1")
+    assert res["status"] == "sucesso"
+    assert res["dados"]["perfil"] == "professor"
+
+def test_autenticar_senha_errada(clean_container):
+    clean_container.cadastrar_usuario_use_case.executar("bruno", "segredo1", "aluno")
+    res = clean_container.auth_controller.autenticar("bruno", "errada")
+    assert res["status"] == "erro"
+    assert res["mensagem"] == "Login ou senha inválidos."
+
+def test_admin_seed_criado_automaticamente(clean_container):
+    res = clean_container.auth_controller.autenticar("admin", "admin123")
+    assert res["status"] == "sucesso"
+    assert res["dados"]["perfil"] == "admin"
+
+def test_login_duplicado_retorna_erro(clean_container):
+    clean_container.cadastrar_usuario_use_case.executar("bruno", "segredo1", "aluno")
+    with pytest.raises(ValueError, match="já está em uso"):
+        clean_container.cadastrar_usuario_use_case.executar("bruno", "outrasenha", "admin")

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Disciplinas{% endblock %}
+{% block content %}
+<section class="module">
+    <h2>Disciplinas</h2>
+    <div class="grid">
+        <div class="card">
+            <div class="card-header">
+                <span class="method POST">POST</span>
+                <span class="endpoint">/api/disciplinas</span>
+            </div>
+            <p class="desc">Cadastra uma disciplina.</p>
+            <div class="rule">⚠ Carga horária deve ser &gt; 0.</div>
+            <label>Código</label><input id="d_cod" placeholder="ex: ARQ01">
+            <label>Nome</label><input id="d_nom" placeholder="ex: Arquitetura de Software">
+            <label>Carga Horária (h)</label><input id="d_ch" type="number" placeholder="ex: 60">
+            <button class="btn-post" onclick="post('/api/disciplinas',{codigo:v('d_cod'),nome:v('d_nom'),carga_horaria:parseInt(v('d_ch'))},'r_disc')">Cadastrar Disciplina</button>
+            <div class="result" id="r_disc"></div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <span class="method GET">GET</span>
+                <span class="endpoint">/api/disciplinas</span>
+            </div>
+            <p class="desc">Lista as disciplinas cadastradas.</p>
+            <button class="btn-get" onclick="listar('/api/disciplinas','t_disciplinas',['codigo','nome','carga_horaria'])">Atualizar Lista</button>
+            <table>
+                <thead><tr><th>Código</th><th>Nome</th><th>Carga Horária</th></tr></thead>
+                <tbody id="t_disciplinas"></tbody>
+            </table>
+        </div>
+    </div>
+</section>
+<script>document.addEventListener('DOMContentLoaded', () => listar('/api/disciplinas','t_disciplinas',['codigo','nome','carga_horaria']));</script>
+{% endblock %}

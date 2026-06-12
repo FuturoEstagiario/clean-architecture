@@ -9,3 +9,7 @@ class IAlunoRepository(ABC):
     @abstractmethod
     def buscar_por_matricula(self, matricula: str) -> Aluno | None:
         pass
+
+    @abstractmethod
+    def listar(self) -> list[Aluno]:
+        pass

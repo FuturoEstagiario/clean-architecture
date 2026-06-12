@@ -13,3 +13,7 @@ class IMatriculaRepository(ABC):
     @abstractmethod
     def listar_por_aluno(self, aluno_matricula: str) -> list[Matricula]:
         pass
+
+    @abstractmethod
+    def listar(self) -> list[Matricula]:
+        pass

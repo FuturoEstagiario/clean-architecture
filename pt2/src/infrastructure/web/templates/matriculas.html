@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Matrículas{% endblock %}
+{% block content %}
+<section class="module">
+    <h2>Matrículas</h2>
+    <div class="grid">
+        <div class="card">
+            <div class="card-header">
+                <span class="method POST">POST</span>
+                <span class="endpoint">/api/matriculas</span>
+            </div>
+            <p class="desc">Matricula um aluno em uma disciplina. Valida existência e bloqueia duplicatas.</p>
+            <label>Matrícula do Aluno</label><input id="m_alu" placeholder="ex: 2026001">
+            <label>Código da Disciplina</label><input id="m_dis" placeholder="ex: ARQ01">
+            <button class="btn-post" onclick="post('/api/matriculas',{aluno_matricula:v('m_alu'),disciplina_codigo:v('m_dis')},'r_mat')">Matricular</button>
+            <div class="result" id="r_mat"></div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <span class="method GET">GET</span>
+                <span class="endpoint">/api/matriculas</span>
+            </div>
+            <p class="desc">Lista as matrículas registradas.</p>
+            <button class="btn-get" onclick="listar('/api/matriculas','t_matriculas',['aluno_matricula','disciplina_codigo'])">Atualizar Lista</button>
+            <table>
+                <thead><tr><th>Aluno</th><th>Disciplina</th></tr></thead>
+                <tbody id="t_matriculas"></tbody>
+            </table>
+        </div>
+    </div>
+</section>
+<script>document.addEventListener('DOMContentLoaded', () => listar('/api/matriculas','t_matriculas',['aluno_matricula','disciplina_codigo']));</script>
+{% endblock %}

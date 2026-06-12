@@ -41,3 +41,12 @@ class SQLiteMatriculaRepository(IMatriculaRepository):
         conn.close()
         
         return [Matricula(r["aluno_matricula"], r["disciplina_codigo"]) for r in rows]
+
+    def listar(self) -> list[Matricula]:
+        conn = self.connection_manager.get_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT aluno_matricula, disciplina_codigo FROM matriculas ORDER BY aluno_matricula")
+        rows = cursor.fetchall()
+        conn.close()
+
+        return [Matricula(r["aluno_matricula"], r["disciplina_codigo"]) for r in rows]

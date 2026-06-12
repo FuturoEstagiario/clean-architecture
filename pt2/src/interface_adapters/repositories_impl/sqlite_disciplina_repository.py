@@ -26,3 +26,12 @@ class SQLiteDisciplinaRepository(IDisciplinaRepository):
         if row:
             return Disciplina(row["codigo"], row["nome"], row["carga_horaria"])
         return None
+
+    def listar(self) -> list[Disciplina]:
+        conn = self.connection_manager.get_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT codigo, nome, carga_horaria FROM disciplinas ORDER BY nome")
+        rows = cursor.fetchall()
+        conn.close()
+
+        return [Disciplina(r["codigo"], r["nome"], r["carga_horaria"]) for r in rows]

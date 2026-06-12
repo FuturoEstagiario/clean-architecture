@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Início{% endblock %} — SGA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header>
+    <div>
+        <div class="logo">&#127979; SGA</div>
+        <div class="subtitle">Sistema de Gestão Acadêmica &nbsp;<span class="badge">ONLINE</span></div>
+    </div>
+    {% if session.usuario %}
+    <div class="user-info">
+        <span>{{ session.usuario.login }} <span class="badge">{{ session.usuario.perfil | upper }}</span></span>
+        <form method="post" action="/logout"><button class="btn-logout">Sair</button></form>
+    </div>
+    {% endif %}
+</header>
+<div class="layout">
+    <nav class="sidebar">
+        <a href="/" class="{{ 'active' if request.path == '/' }}">Início</a>
+        <a href="/alunos" class="{{ 'active' if request.path == '/alunos' }}">Alunos</a>
+        <a href="/professores" class="{{ 'active' if request.path == '/professores' }}">Professores</a>
+        <a href="/disciplinas" class="{{ 'active' if request.path == '/disciplinas' }}">Disciplinas</a>
+        <a href="/matriculas" class="{{ 'active' if request.path == '/matriculas' }}">Matrículas</a>
+        <a href="/notas" class="{{ 'active' if request.path == '/notas' }}">Notas</a>
+        <a href="/frequencias" class="{{ 'active' if request.path == '/frequencias' }}">Frequências</a>
+        <a href="/desempenho" class="{{ 'active' if request.path == '/desempenho' }}">Desempenho</a>
+    </nav>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+</div>
+<footer>Sistema de Gestão Acadêmica &mdash; Clean Architecture &mdash; Flask API na porta 5000</footer>
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

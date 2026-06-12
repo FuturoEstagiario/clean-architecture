@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Desempenho{% endblock %}
+{% block content %}
+<section class="module">
+    <h2>Desempenho</h2>
+    <div class="grid">
+        <div class="card">
+            <div class="card-header">
+                <span class="method GET">GET</span>
+                <span class="endpoint">/api/desempenho/&lt;matricula&gt;</span>
+            </div>
+            <p class="desc">Retorna o boletim acadêmico completo via DTO + Presenter.</p>
+            <label>Matrícula do Aluno</label><input id="des_mat" placeholder="ex: 2026001">
+            <button class="btn-get" onclick="get('/api/desempenho/'+v('des_mat'),'r_des')">Consultar Desempenho</button>
+            <div class="result" id="r_des"></div>
+        </div>
+    </div>
+</section>
+{% endblock %}

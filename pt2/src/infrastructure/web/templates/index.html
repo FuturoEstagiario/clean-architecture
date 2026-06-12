@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Início{% endblock %}
+{% block content %}
+<section class="module">
+    <h2>Módulos do Sistema</h2>
+    <div class="grid">
+        <a class="card nav-card" href="/alunos"><h3>Alunos</h3><p class="desc">Cadastro de novos alunos.</p></a>
+        <a class="card nav-card" href="/professores"><h3>Professores</h3><p class="desc">Cadastro de professores.</p></a>
+        <a class="card nav-card" href="/disciplinas"><h3>Disciplinas</h3><p class="desc">Cadastro de disciplinas e carga horária.</p></a>
+        <a class="card nav-card" href="/matriculas"><h3>Matrículas</h3><p class="desc">Vínculo de alunos a disciplinas.</p></a>
+        <a class="card nav-card" href="/notas"><h3>Notas</h3><p class="desc">Lançamento de avaliações (0 a 10).</p></a>
+        <a class="card nav-card" href="/frequencias"><h3>Frequências</h3><p class="desc">Registro de presenças por disciplina.</p></a>
+        <a class="card nav-card" href="/desempenho"><h3>Desempenho</h3><p class="desc">Boletim acadêmico consolidado.</p></a>
+    </div>
+</section>
+{% endblock %}
