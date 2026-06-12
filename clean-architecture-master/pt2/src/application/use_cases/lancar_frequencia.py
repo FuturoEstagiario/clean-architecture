@@ -8,14 +8,10 @@ class LancarFrequencia:
         self.matricula_repository = matricula_repository
 
     def executar(self, aluno_matricula: str, disciplina_codigo: str, aulas_presente: int, aulas_total: int) -> Frequencia:
-        # Validar se o aluno está matriculado
         matricula = self.matricula_repository.buscar_por_aluno_e_disciplina(aluno_matricula, disciplina_codigo)
         if matricula is None:
             raise ValueError(f"Matrícula não encontrada para o aluno {aluno_matricula} na disciplina {disciplina_codigo}.")
-            
-        # Instanciar a entidade Frequencia (executa validações internas)
+
         nova_frequencia = Frequencia(aluno_matricula, disciplina_codigo, aulas_presente, aulas_total)
-        
         self.frequencia_repository.salvar(nova_frequencia)
-        print(f"Frequência lançada com sucesso para o aluno {aluno_matricula}: {aulas_presente}/{aulas_total} aulas.")
         return nova_frequencia

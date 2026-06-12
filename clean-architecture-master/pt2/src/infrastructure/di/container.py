@@ -4,6 +4,8 @@ from src.interface_adapters.repositories_impl.sqlite_disciplina_repository impor
 from src.interface_adapters.repositories_impl.sqlite_matricula_repository import SQLiteMatriculaRepository
 from src.interface_adapters.repositories_impl.sqlite_nota_repository import SQLiteNotaRepository
 from src.interface_adapters.repositories_impl.sqlite_frequencia_repository import SQLiteFrequenciaRepository
+from src.interface_adapters.repositories_impl.sqlite_professor_repository import SQLiteProfessorRepository
+from src.interface_adapters.repositories_impl.sqlite_usuario_repository import SQLiteUsuarioRepository
 
 from src.application.use_cases.cadastrar_aluno import CadastrarAluno
 from src.application.use_cases.cadastrar_disciplina import CadastrarDisciplina
@@ -11,8 +13,21 @@ from src.application.use_cases.matricular_aluno import MatricularAluno
 from src.application.use_cases.lancar_nota import LancarNota
 from src.application.use_cases.lancar_frequencia import LancarFrequencia
 from src.application.use_cases.consultar_desempenho import ConsultarDesempenho
+from src.application.use_cases.listar_alunos import ListarAlunos
+from src.application.use_cases.alterar_situacao_aluno import AlterarSituacaoAluno
+from src.application.use_cases.calcular_aprovacao import CalcularAprovacao
+from src.application.use_cases.calcular_media import CalcularMedia
+from src.application.use_cases.cadastrar_professor import CadastrarProfessor
+from src.application.use_cases.listar_professores import ListarProfessores
+from src.application.use_cases.cadastrar_usuario import CadastrarUsuario
+from src.application.use_cases.autenticar_usuario import AutenticarUsuario
 
 from src.interface_adapters.presenters.desempenho_presenter import DesempenhoPresenter
+from src.interface_adapters.presenters.aluno_lista_presenter import AlunoListaPresenter
+from src.interface_adapters.presenters.aprovacao_presenter import AprovacaoPresenter
+from src.interface_adapters.presenters.media_presenter import MediaPresenter
+from src.interface_adapters.presenters.professor_presenter import ProfessorListaPresenter
+from src.interface_adapters.presenters.autenticacao_presenter import AutenticacaoPresenter
 
 from src.interface_adapters.controllers.aluno_controller import AlunoController
 from src.interface_adapters.controllers.disciplina_controller import DisciplinaController
@@ -20,24 +35,39 @@ from src.interface_adapters.controllers.matricula_controller import MatriculaCon
 from src.interface_adapters.controllers.nota_controller import NotaController
 from src.interface_adapters.controllers.frequencia_controller import FrequenciaController
 from src.interface_adapters.controllers.desempenho_controller import DesempenhoController
+from src.interface_adapters.controllers.alterar_situacao_controller import AlterarSituacaoController
+from src.interface_adapters.controllers.aprovacao_controller import AprovacaoController
+from src.interface_adapters.controllers.media_controller import MediaController
+from src.interface_adapters.controllers.professor_controller import ProfessorController
+from src.interface_adapters.controllers.autenticacao_controller import AutenticacaoController
+
 
 class Container:
     def __init__(self, db_path: str = "academico.db"):
         # 1. Infraestrutura
         self.db_connection = SQLiteConnection(db_path)
-        
+
         # 2. Repositórios
         self.aluno_repository = SQLiteAlunoRepository(self.db_connection)
         self.disciplina_repository = SQLiteDisciplinaRepository(self.db_connection)
         self.matricula_repository = SQLiteMatriculaRepository(self.db_connection)
         self.nota_repository = SQLiteNotaRepository(self.db_connection)
         self.frequencia_repository = SQLiteFrequenciaRepository(self.db_connection)
-        
+        self.professor_repository = SQLiteProfessorRepository(self.db_connection)
+        self.usuario_repository = SQLiteUsuarioRepository(self.db_connection)
+
         # 3. Presenters
         self.desempenho_presenter = DesempenhoPresenter()
-        
+        self.aluno_lista_presenter = AlunoListaPresenter()
+        self.aprovacao_presenter = AprovacaoPresenter()
+        self.media_presenter = MediaPresenter()
+        self.professor_lista_presenter = ProfessorListaPresenter()
+        self.autenticacao_presenter = AutenticacaoPresenter()
+
         # 4. Use Cases
         self.cadastrar_aluno_use_case = CadastrarAluno(self.aluno_repository)
+        self.listar_alunos_use_case = ListarAlunos(self.aluno_repository)
+        self.alterar_situacao_use_case = AlterarSituacaoAluno(self.aluno_repository)
         self.cadastrar_disciplina_use_case = CadastrarDisciplina(self.disciplina_repository)
         self.matricular_aluno_use_case = MatricularAluno(
             self.matricula_repository, self.aluno_repository, self.disciplina_repository
@@ -45,17 +75,37 @@ class Container:
         self.lancar_nota_use_case = LancarNota(self.nota_repository, self.matricula_repository)
         self.lancar_frequencia_use_case = LancarFrequencia(self.frequencia_repository, self.matricula_repository)
         self.consultar_desempenho_use_case = ConsultarDesempenho(
-            self.aluno_repository,
-            self.matricula_repository,
-            self.nota_repository,
-            self.frequencia_repository,
-            self.disciplina_repository
+            self.aluno_repository, self.matricula_repository,
+            self.nota_repository, self.frequencia_repository, self.disciplina_repository,
         )
-        
+        self.calcular_aprovacao_use_case = CalcularAprovacao(
+            self.aluno_repository, self.disciplina_repository,
+            self.matricula_repository, self.nota_repository, self.frequencia_repository,
+        )
+        self.calcular_media_use_case = CalcularMedia(
+            self.aluno_repository, self.disciplina_repository,
+            self.matricula_repository, self.nota_repository,
+        )
+        self.cadastrar_professor_use_case = CadastrarProfessor(self.professor_repository)
+        self.listar_professores_use_case = ListarProfessores(self.professor_repository)
+        self.cadastrar_usuario_use_case = CadastrarUsuario(self.usuario_repository)
+        self.autenticar_usuario_use_case = AutenticarUsuario(self.usuario_repository)
+
         # 5. Controllers
-        self.aluno_controller = AlunoController(self.cadastrar_aluno_use_case)
+        self.aluno_controller = AlunoController(
+            self.cadastrar_aluno_use_case, self.listar_alunos_use_case, self.aluno_lista_presenter,
+        )
         self.disciplina_controller = DisciplinaController(self.cadastrar_disciplina_use_case)
         self.matricula_controller = MatriculaController(self.matricular_aluno_use_case)
         self.nota_controller = NotaController(self.lancar_nota_use_case)
         self.frequencia_controller = FrequenciaController(self.lancar_frequencia_use_case)
         self.desempenho_controller = DesempenhoController(self.consultar_desempenho_use_case, self.desempenho_presenter)
+        self.alterar_situacao_controller = AlterarSituacaoController(self.alterar_situacao_use_case)
+        self.aprovacao_controller = AprovacaoController(self.calcular_aprovacao_use_case, self.aprovacao_presenter)
+        self.media_controller = MediaController(self.calcular_media_use_case, self.media_presenter)
+        self.professor_controller = ProfessorController(
+            self.cadastrar_professor_use_case, self.listar_professores_use_case, self.professor_lista_presenter,
+        )
+        self.autenticacao_controller = AutenticacaoController(
+            self.cadastrar_usuario_use_case, self.autenticar_usuario_use_case, self.autenticacao_presenter,
+        )

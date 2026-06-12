@@ -5,7 +5,7 @@ class CadastrarAluno:
     def __init__(self, repository: IAlunoRepository):
         self.repository = repository
 
-    def executar(self, matricula: str, nome: str):
+    def executar(self, matricula: str, nome: str) -> Aluno:
         novo_aluno = Aluno(matricula, nome)
         self.repository.salvar(novo_aluno)
-        print(f"Aluno {nome} cadastrado com sucesso!")
+        return novo_aluno

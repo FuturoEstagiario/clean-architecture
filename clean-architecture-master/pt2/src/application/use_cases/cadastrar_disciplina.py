@@ -11,5 +11,4 @@ class CadastrarDisciplina:
             
         nova_disciplina = Disciplina(codigo, nome, carga_horaria)
         self.repository.salvar(nova_disciplina)
-        print(f"Disciplina '{nome}' cadastrada com sucesso!")
         return nova_disciplina

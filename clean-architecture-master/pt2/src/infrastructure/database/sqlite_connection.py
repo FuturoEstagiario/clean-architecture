@@ -15,6 +15,7 @@ class SQLiteConnection:
 
     def _criar_tabelas(self):
         conn = sqlite3.connect(self.db_path)
+        conn.execute("PRAGMA foreign_keys = ON;")
         cursor = conn.cursor()
         
         # Alunos
@@ -69,6 +70,25 @@ class SQLiteConnection:
                 FOREIGN KEY (aluno_matricula, disciplina_codigo) REFERENCES matriculas(aluno_matricula, disciplina_codigo) ON DELETE CASCADE
             );
         """)
-        
+
+        # Professores
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS professores (
+                matricula_funcional TEXT PRIMARY KEY,
+                nome TEXT NOT NULL,
+                email TEXT NOT NULL
+            );
+        """)
+
+        # Usuários (autenticação com perfis)
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS usuarios (
+                login TEXT PRIMARY KEY,
+                nome TEXT NOT NULL,
+                perfil TEXT NOT NULL,
+                senha_hash TEXT NOT NULL
+            );
+        """)
+
         conn.commit()
         conn.close()

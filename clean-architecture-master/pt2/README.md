@@ -1,145 +1,238 @@
-# Sistema de Gestão Acadêmica — Sprint 3 (Consolidação Arquitetural)
+# Sistema de Gestão Acadêmica — Sprint 3
 
-## Arquitetura Escolhida
-**Clean Architecture** (Arquitetura Limpa). O código é estruturado de forma concêntrica, garantindo que as dependências fluam sempre de fora para dentro (infraestrutura e adaptadores dependem dos casos de uso, que dependem exclusivamente das entidades de domínio).
+## Como Rodar e Usar (Leia Primeiro)
 
----
+### 1. Instalar dependências
 
-## Descrição das implementações e evolução arquitetural - Sprint 3
-
-### 1. Melhorias Arquiteturais em relação à Sprint 2 (Correções Efetuadas)
-* **Baixo Acoplamento e Composition Root (Container)**: Na Sprint 2, os controllers instanciavam diretamente o repositório SQLite concretamente. Para resolver este acoplamento, implementamos um container de injeção de dependência centralizado em `src/infrastructure/di/container.py` (**Composition Root**). O container monta a conexão com o banco, instacia os repositórios e os injeta nos casos de uso e nos controllers. Os controllers não possuem dependência física ou importação do SQLite.
-* **Desacoplamento Use Case vs. Apresentação (DTOs)**: O caso de uso `ConsultarDesempenho` não retorna mais dicionários genéricos (`dict`). Criamos um DTO estruturado e tipado em `src/application/dtos/desempenho_dto.py` para transportar os dados processados para a camada externa.
-* **Formatação Centralizada (Presenters)**: Criamos o `DesempenhoPresenter` na camada de adaptadores de interface. Ele recebe o `DesempenhoDTO` e gera o formato ideal de exibição (JSON formatado para API HTTP Flask ou relatório amigável em ASCII para terminal CLI).
-
----
-
-### 2. Novas Funcionalidades da Sprint 3
-
-#### A. Cadastrar Disciplina
-* **Descrição**: Permite registrar uma disciplina no sistema para que alunos possam ser matriculados.
-* **Componentes envolvidos**: `disciplina_controller.py` -> `cadastrar_disciplina.py` (Use Case) -> `Disciplina` (Entity) -> `IDisciplinaRepository` (Interface) -> `sqlite_disciplina_repository.py` (Persistence).
-* **Regra de Negócio**: A carga horária da disciplina deve ser maior que 0.
-* **Persistência**: Tabela `disciplinas` no SQLite.
-* **Exemplos de Entrada e Saída**:
-  * *Entrada (HTTP POST /disciplinas)*: `{"codigo": "ARQ01", "nome": "Arquitetura de Software", "carga_horaria": 60}`
-  * *Saída*: `{"status": "sucesso", "mensagem": "Disciplina 'Arquitetura de Software' cadastrada com sucesso."}`
-
-#### B. Matricular Aluno em Disciplina
-* **Descrição**: Vincula um aluno cadastrado a uma disciplina ativa.
-* **Componentes envolvidos**: `matricula_controller.py` -> `matricular_aluno.py` (Use Case) -> `Matricula` (Entity) -> `IMatriculaRepository` (Interface) -> `sqlite_matricula_repository.py` (Persistence).
-* **Regra de Negócio**: Valida a existência do aluno e da disciplina no banco e impede que o aluno seja matriculado em duplicidade na mesma disciplina.
-* **Persistência**: Tabela `matriculas` no SQLite.
-* **Exemplos de Entrada e Saída**:
-  * *Entrada (HTTP POST /matriculas)*: `{"aluno_matricula": "2026001", "disciplina_codigo": "ARQ01"}`
-  * *Saída*: `{"status": "sucesso", "mensagem": "Aluno '2026001' matriculado na disciplina 'ARQ01'."}`
-
-#### C. Lançar Frequência
-* **Descrição**: Registra o total de aulas e a presença de um aluno em determinada disciplina.
-* **Componentes envolvidos**: `frequencia_controller.py` -> `lancar_frequencia.py` (Use Case) -> `Frequencia` (Entity) -> `IFrequenciaRepository` (Interface) -> `sqlite_frequencia_repository.py` (Persistence).
-* **Regra de Negócio**: Valida se o aluno possui matrícula ativa na disciplina. O total de aulas deve ser maior que zero, presenças não podem ser negativas e não podem exceder o total de aulas.
-* **Persistência**: Tabela `frequencias` no SQLite.
-* **Exemplos de Entrada e Saída**:
-  * *Entrada (HTTP POST /frequencias)*: `{"aluno_matricula": "2026001", "disciplina_codigo": "ARQ01", "aulas_presente": 18, "aulas_total": 20}`
-  * *Saída*: `{"status": "sucesso", "mensagem": "Frequência lançada com sucesso."}`
-
----
-
-### 3. Funcionalidades de Sprints Anteriores (Revisadas e Integradas no SQLite)
-
-#### D. Lançar Nota (Sprint 2)
-* **Fluxo**: `nota_controller.py` -> `lancar_nota.py` (Use Case) -> `Nota` (Entity) -> `INotaRepository` (Interface) -> `sqlite_nota_repository.py`.
-* **Regra de Negócio**: Valida se o aluno está matriculado na disciplina. A nota deve ser validada na Entidade `Nota` (deve estar entre 0.0 e 10.0).
-* **Persistência**: Tabela `notas` no SQLite.
-
-#### E. Consultar Desempenho Acadêmico (Sprint 2)
-* **Fluxo**: `desempenho_controller.py` -> `consultar_desempenho.py` (Use Case) -> `DesempenhoDTO` -> `DesempenhoPresenter` -> Exibição final (JSON ou Console).
-
----
-
-## Estrutura de Pastas Completa
+```bash
+pip install flask pytest
 ```
+
+### 2. Entrar na pasta correta
+
+```bash
+cd pt2
+```
+
+> **Todos os comandos abaixo devem ser executados dentro da pasta `pt2`.**
+
+### 3. Iniciar o servidor web
+
+```bash
+python -m flask --app src/infrastructure/web/app.py run
+```
+
+Acesse `http://localhost:5000` no navegador.
+
+### 4. Fazer login
+
+O banco já vem com três usuários prontos:
+
+| Perfil              | Login    | Senha      | O que vê                               |
+| ------------------- | -------- | ---------- | -------------------------------------- |
+| **Aluno**           | `aluno1` | `aluno123` | Desempenho, Média, Aprovação           |
+| **Professor**       | `prof1`  | `prof123`  | Lançar Nota/Frequência, Acompanhamento |
+| **Administrador**   | `admin`  | `admin123` | Tudo — cadastros, gestão, usuários     |
+
+> O aluno `aluno1` (matrícula `2026001`) já tem dados na disciplina `ARQ01`
+> (notas 8.5 e 7.0, 85% de frequência) — use esses valores para testar as
+> consultas imediatamente após o login.
+
+### 5. Rodar os testes automatizados
+
+```bash
+python -m pytest src/tests/test_use_cases.py -v
+```
+
+32 testes, todos passando.
+
+---
+
+## Arquitetura: Clean Architecture
+
+O projeto segue a **Arquitetura Limpa** (Clean Architecture) de Robert C. Martin.
+As dependências sempre fluem de fora para dentro: a infraestrutura depende dos
+adaptadores, que dependem dos casos de uso, que dependem apenas das entidades de
+domínio. Nenhuma camada interna conhece a externa.
+
+```
+┌─────────────────────────────────────────────────┐
+│           Infrastructure (Flask, SQLite)         │  ← mais externo
+│  ┌───────────────────────────────────────────┐   │
+│  │    Interface Adapters (Controllers,       │   │
+│  │    Presenters, Repositories Impl)         │   │
+│  │  ┌─────────────────────────────────────┐  │   │
+│  │  │  Application (Use Cases, DTOs,      │  │   │
+│  │  │  Repository Interfaces)             │  │   │
+│  │  │  ┌───────────────────────────────┐  │  │   │
+│  │  │  │  Domain (Entities + Rules)    │  │  │   │  ← mais interno
+│  │  │  └───────────────────────────────┘  │  │   │
+│  │  └─────────────────────────────────────┘  │   │
+│  └───────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────┘
+```
+
+---
+
+## Funcionalidades Implementadas
+
+### Sprint 3 — Novas funcionalidades
+
+#### Entidade Professor (Domínio)
+
+- `domain/entities/professor.py` — entidade com matrícula funcional, nome e e-mail
+- `POST /professores` — cadastrar professor
+- `GET /professores` — listar todos os professores
+
+#### Autenticação de Usuários
+
+- `domain/entities/usuario.py` — senha em SHA-256, perfis: aluno / professor / administrador
+- `POST /usuarios` — cadastrar usuário
+- `POST /auth/login` — autenticar e receber token UUID de sessão
+
+#### Calcular Média (caso de uso independente)
+
+- `application/use_cases/calcular_media.py` — média aritmética das notas com status
+- `GET /media/<matricula>/<disciplina>` — retorna média e status (Aprovado ≥ 6.0 / Reprovado)
+
+#### Alterar Situação do Aluno
+
+- `PATCH /alunos/<matricula>/situacao` — Ativo, Trancado ou Formado
+
+#### Listar Alunos
+
+- `GET /alunos` — retorna todos os alunos com matrícula, nome e situação
+
+### Sprint 2 — Funcionalidades revisadas
+
+| Funcionalidade | Endpoint | Regra de negócio |
+| --- | --- | --- |
+| Cadastrar Aluno | `POST /alunos` | Matrícula única |
+| Cadastrar Disciplina | `POST /disciplinas` | Carga horária > 0 |
+| Matricular Aluno | `POST /matriculas` | Sem duplicatas; valida aluno e disciplina |
+| Lançar Nota | `POST /notas` | Valor entre 0.0 e 10.0; requer matrícula ativa |
+| Lançar Frequência | `POST /frequencias` | Presencas <= total de aulas |
+| Consultar Desempenho | `GET /desempenho/<matricula>` | Boletim via DTO + Presenter |
+| Calcular Aprovação | `GET /aprovacao/<mat>/<disc>` | Media >= 6.0 e frequencia >= 75% |
+
+---
+
+## Melhorias Arquiteturais (Sprint 3 vs Sprint 2)
+
+### Violações corrigidas
+
+- **`print()` removido dos casos de uso** — output é responsabilidade do Presenter, não do Use Case
+- **`MemoryAlunoRepository` incompleto** — estava sem `buscar_por_matricula`, `listar_todos` e `atualizar_situacao`; reescrito com `dict` para lookup O(1)
+- **PRAGMA inconsistente** — `_criar_tabelas()` não habilitava `foreign_keys = ON`; corrigido
+
+### Padrões adicionados
+
+- **DTO para cada caso de uso** — `AlunoResumoDTO`, `AprovacaoDTO`, `MediaDTO`, `ProfessorResumoDTO`, `AutenticacaoDTO`
+- **Presenter para cada fluxo** — `AlunoListaPresenter`, `AprovacaoPresenter`, `MediaPresenter`, `ProfessorListaPresenter`, `AutenticacaoPresenter`
+- **Container (Composition Root)** — único ponto de montagem de toda a árvore de dependências em `infrastructure/di/container.py`
+
+---
+
+## Estrutura de Pastas
+
+```text
 pt2/
-├── demo_academico.db      # Banco de dados SQLite gerado na demonstração
-├── README.md              # Este arquivo
-├── src/
-│   ├── __init__.py
-│   ├── main.py            # CLI Demo Executável
-│   ├── domain/
-│   │   ├── entities/
-│   │   │   ├── aluno.py
-│   │   │   ├── disciplina.py
-│   │   │   ├── frequencia.py
-│   │   │   ├── matricula.py
-│   │   │   └── nota.py
-│   ├── application/
-│   │   ├── dtos/
-│   │   │   └── desempenho_dto.py
-│   │   ├── repositories/
-│   │   │   ├── aluno_repository.py
-│   │   │   ├── disciplina_repository.py
-│   │   │   ├── frequencia_repository.py
-│   │   │   ├── matricula_repository.py
-│   │   │   └── nota_repository.py
-│   │   ├── use_cases/
-│   │   │   ├── cadastrar_aluno.py
-│   │   │   ├── cadastrar_disciplina.py
-│   │   │   ├── consultar_desempenho.py
-│   │   │   ├── lancar_frequencia.py
-│   │   │   └── lancar_nota.py
-│   ├── interface_adapters/
-│   │   ├── controllers/
-│   │   │   ├── aluno_controller.py
-│   │   │   ├── desempenho_controller.py
-│   │   │   ├── disciplina_controller.py
-│   │   │   ├── frequencia_controller.py
-│   │   │   ├── matricula_controller.py
-│   │   │   └── nota_controller.py
-│   │   ├── presenters/
-│   │   │   └── desempenho_presenter.py
-│   │   ├── repositories_impl/
-│   │   │   ├── sqlite_aluno_repository.py
-│   │   │   ├── sqlite_disciplina_repository.py
-│   │   │   ├── sqlite_frequencia_repository.py
-│   │   │   ├── sqlite_matricula_repository.py
-│   │   │   └── sqlite_nota_repository.py
-│   ├── infrastructure/
-│   │   ├── database/
-│   │   │   └── sqlite_connection.py
-│   │   ├── di/
-│   │   │   └── container.py
-│   │   ├── web/
-│   │   │   └── app.py     # Servidor Web Flask
-│   └── tests/
-│       └── test_use_cases.py
+├── academico.db               # Banco SQLite (gerado ao rodar)
+├── README.md
+└── src/
+    ├── domain/
+    │   └── entities/
+    │       ├── aluno.py            # situacao: Ativo/Trancado/Formado
+    │       ├── disciplina.py
+    │       ├── frequencia.py
+    │       ├── matricula.py
+    │       ├── nota.py
+    │       ├── professor.py        # NOVO
+    │       └── usuario.py          # NOVO — senha SHA-256, perfis
+    ├── application/
+    │   ├── dtos/
+    │   │   ├── desempenho_dto.py
+    │   │   ├── aluno_dto.py        # NOVO
+    │   │   ├── aprovacao_dto.py    # NOVO
+    │   │   ├── autenticacao_dto.py # NOVO
+    │   │   ├── media_dto.py        # NOVO
+    │   │   └── professor_dto.py    # NOVO
+    │   ├── repositories/           # Interfaces abstratas (sem dependência de SQLite)
+    │   │   ├── aluno_repository.py
+    │   │   ├── disciplina_repository.py
+    │   │   ├── frequencia_repository.py
+    │   │   ├── matricula_repository.py
+    │   │   ├── nota_repository.py
+    │   │   ├── professor_repository.py # NOVO
+    │   │   └── usuario_repository.py   # NOVO
+    │   └── use_cases/
+    │       ├── cadastrar_aluno.py
+    │       ├── cadastrar_disciplina.py
+    │       ├── matricular_aluno.py
+    │       ├── lancar_nota.py
+    │       ├── lancar_frequencia.py
+    │       ├── consultar_desempenho.py
+    │       ├── listar_alunos.py          # NOVO
+    │       ├── alterar_situacao_aluno.py # NOVO
+    │       ├── calcular_aprovacao.py     # NOVO
+    │       ├── calcular_media.py         # NOVO
+    │       ├── cadastrar_professor.py    # NOVO
+    │       ├── listar_professores.py     # NOVO
+    │       ├── cadastrar_usuario.py      # NOVO
+    │       └── autenticar_usuario.py     # NOVO
+    ├── interface_adapters/
+    │   ├── controllers/
+    │   │   ├── aluno_controller.py
+    │   │   ├── disciplina_controller.py
+    │   │   ├── matricula_controller.py
+    │   │   ├── nota_controller.py
+    │   │   ├── frequencia_controller.py
+    │   │   ├── desempenho_controller.py
+    │   │   ├── alterar_situacao_controller.py # NOVO
+    │   │   ├── aprovacao_controller.py        # NOVO
+    │   │   ├── media_controller.py            # NOVO
+    │   │   ├── professor_controller.py        # NOVO
+    │   │   └── autenticacao_controller.py     # NOVO
+    │   ├── presenters/
+    │   │   ├── desempenho_presenter.py
+    │   │   ├── aluno_lista_presenter.py  # NOVO
+    │   │   ├── aprovacao_presenter.py    # NOVO
+    │   │   ├── autenticacao_presenter.py # NOVO
+    │   │   ├── media_presenter.py        # NOVO
+    │   │   └── professor_presenter.py    # NOVO
+    │   └── repositories_impl/
+    │       ├── sqlite_aluno_repository.py
+    │       ├── sqlite_disciplina_repository.py
+    │       ├── sqlite_frequencia_repository.py
+    │       ├── sqlite_matricula_repository.py
+    │       ├── sqlite_nota_repository.py
+    │       ├── sqlite_professor_repository.py # NOVO
+    │       └── sqlite_usuario_repository.py   # NOVO
+    ├── infrastructure/
+    │   ├── database/
+    │   │   └── sqlite_connection.py   # cria todas as tabelas
+    │   ├── di/
+    │   │   └── container.py           # Composition Root — monta tudo
+    │   └── web/
+    │       └── app.py                 # Flask + HTML frontend com login por perfil
+    └── tests/
+        └── test_use_cases.py          # 32 testes automatizados
 ```
 
 ---
 
-## Como Executar e Testar
+## Testes Automatizados
 
-### 1. Requisitos de Instalação
-Certifique-se de que os pacotes necessários estão instalados:
 ```bash
-pip install flask pytest pypdf
+python -m pytest src/tests/test_use_cases.py -v
 ```
 
-### 2. Executar Demonstração Console (CLI)
-A demonstração inicializa o banco SQLite limpo, cria as entidades, executa regras de validação (mostrando erros controlados para notas e frequências inválidas) e imprime o boletim final através do Presenter.
-```bash
-cd pt2
-python -m src.main
-```
+Os 32 testes cobrem:
 
-### 3. Iniciar o Servidor Web Flask
-```bash
-cd pt2
-python -m src.infrastructure.web.app
-```
-O servidor rodará na porta `5000`. Você pode testar enviando requisições via cURL ou ferramentas como Postman.
-
-### 4. Rodar Testes Automatizados
-```bash
-cd pt2
-pytest -v
-```
+- Validações de domínio (Nota, Frequência, Disciplina, Aluno, Usuario)
+- Fluxo completo de desempenho com Presenter (JSON e console)
+- Listar e alterar situação de alunos
+- Calcular aprovação (Aprovado / Reprovado por Nota / Reprovado por Frequência / Em Andamento)
+- CRUD de Professor
+- Autenticação (sucesso, senha errada, usuário inexistente, perfil inválido, duplicatas)
+- Calcular Média (Aprovado por Nota / Reprovado por Nota / Sem notas lançadas)
