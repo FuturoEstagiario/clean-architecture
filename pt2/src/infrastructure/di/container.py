@@ -21,8 +21,13 @@ from src.application.use_cases.cadastrar_professor import CadastrarProfessor
 from src.application.use_cases.listar_professores import ListarProfessores
 from src.application.use_cases.cadastrar_usuario import CadastrarUsuario
 from src.application.use_cases.autenticar_usuario import AutenticarUsuario
+from src.application.use_cases.calcular_media import CalcularMedia
+from src.application.use_cases.calcular_aprovacao import CalcularAprovacao
+from src.application.use_cases.alterar_situacao_aluno import AlterarSituacaoAluno
 
 from src.interface_adapters.presenters.desempenho_presenter import DesempenhoPresenter
+from src.interface_adapters.presenters.media_presenter import MediaPresenter
+from src.interface_adapters.presenters.aprovacao_presenter import AprovacaoPresenter
 
 from src.interface_adapters.controllers.aluno_controller import AlunoController
 from src.interface_adapters.controllers.disciplina_controller import DisciplinaController
@@ -32,6 +37,9 @@ from src.interface_adapters.controllers.frequencia_controller import FrequenciaC
 from src.interface_adapters.controllers.desempenho_controller import DesempenhoController
 from src.interface_adapters.controllers.professor_controller import ProfessorController
 from src.interface_adapters.controllers.auth_controller import AuthController
+from src.interface_adapters.controllers.media_controller import MediaController
+from src.interface_adapters.controllers.aprovacao_controller import AprovacaoController
+from src.interface_adapters.controllers.alterar_situacao_controller import AlterarSituacaoController
 
 class Container:
     def __init__(self, db_path: str = "academico.db"):
@@ -50,6 +58,8 @@ class Container:
         
         # 3. Presenters
         self.desempenho_presenter = DesempenhoPresenter()
+        self.media_presenter = MediaPresenter()
+        self.aprovacao_presenter = AprovacaoPresenter()
         
         # 4. Use Cases
         self.cadastrar_aluno_use_case = CadastrarAluno(self.aluno_repository)
@@ -73,6 +83,15 @@ class Container:
         self.listar_professores_use_case = ListarProfessores(self.professor_repository)
         self.cadastrar_usuario_use_case = CadastrarUsuario(self.usuario_repository, self.password_hasher)
         self.autenticar_usuario_use_case = AutenticarUsuario(self.usuario_repository, self.password_hasher)
+        self.calcular_media_use_case = CalcularMedia(
+            self.aluno_repository, self.disciplina_repository,
+            self.matricula_repository, self.nota_repository,
+        )
+        self.calcular_aprovacao_use_case = CalcularAprovacao(
+            self.aluno_repository, self.disciplina_repository,
+            self.matricula_repository, self.nota_repository, self.frequencia_repository,
+        )
+        self.alterar_situacao_use_case = AlterarSituacaoAluno(self.aluno_repository)
 
         # 5. Controllers
         self.aluno_controller = AlunoController(self.cadastrar_aluno_use_case, self.listar_alunos_use_case)
@@ -83,6 +102,9 @@ class Container:
         self.desempenho_controller = DesempenhoController(self.consultar_desempenho_use_case, self.desempenho_presenter)
         self.professor_controller = ProfessorController(self.cadastrar_professor_use_case, self.listar_professores_use_case)
         self.auth_controller = AuthController(self.autenticar_usuario_use_case)
+        self.media_controller = MediaController(self.calcular_media_use_case, self.media_presenter)
+        self.aprovacao_controller = AprovacaoController(self.calcular_aprovacao_use_case, self.aprovacao_presenter)
+        self.alterar_situacao_controller = AlterarSituacaoController(self.alterar_situacao_use_case)
 
         self._garantir_admin_inicial()
 

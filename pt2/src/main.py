@@ -65,6 +65,19 @@ def main():
     import json
     print(json.dumps(boletim_json, indent=2, ensure_ascii=False))
 
+    print("\n7. --- Calculando Média (Nova Funcionalidade) ---")
+    print(container.media_controller.calcular("2026001", "ARQ01"))
+    print(container.media_controller.calcular("2026001", "CALC01"))
+
+    print("\n8. --- Calculando Aprovação (Nova Funcionalidade) ---")
+    print(container.aprovacao_controller.calcular("2026001", "ARQ01"))
+    print(container.aprovacao_controller.calcular("2026001", "CALC01"))
+
+    print("\n9. --- Alterando Situação do Aluno (Nova Funcionalidade) ---")
+    print(container.alterar_situacao_controller.alterar("2026001", "Inativo"))
+    print(container.alterar_situacao_controller.alterar("2026002", "Trancado"))
+    print(f"\n   Listagem após alteração: {container.aluno_controller.listar()}")
+
     print("\n--- Demonstração finalizada com sucesso ---")
 
 if __name__ == "__main__":

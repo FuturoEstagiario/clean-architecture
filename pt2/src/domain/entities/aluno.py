@@ -7,3 +7,8 @@ class Aluno:
         self.matricula = matricula
         self.nome = nome
         self.situacao = "Ativo"
+
+    def alterar_situacao(self, nova_situacao: str) -> None:
+        if not nova_situacao or not nova_situacao.strip():
+            raise ValueError("A situação do aluno é obrigatória.")
+        self.situacao = nova_situacao

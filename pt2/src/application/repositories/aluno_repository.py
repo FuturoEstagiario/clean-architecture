@@ -13,3 +13,7 @@ class IAlunoRepository(ABC):
     @abstractmethod
     def listar(self) -> list[Aluno]:
         pass
+
+    @abstractmethod
+    def atualizar_situacao(self, matricula: str, nova_situacao: str) -> None:
+        pass
