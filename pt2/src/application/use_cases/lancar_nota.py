@@ -17,5 +17,4 @@ class LancarNota:
         nova_nota = Nota(aluno_matricula, disciplina_codigo, valor, tipo_avaliacao)
         
         self.nota_repository.salvar(nova_nota)
-        print(f"Nota {valor:.1f} ({tipo_avaliacao}) lançada com sucesso para o aluno {aluno_matricula}!")
         return nova_nota

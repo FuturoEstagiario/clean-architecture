@@ -8,4 +8,3 @@ class CadastrarAluno:
     def executar(self, matricula: str, nome: str):
         novo_aluno = Aluno(matricula, nome)
         self.repository.salvar(novo_aluno)
-        print(f"Aluno {nome} cadastrado com sucesso!")

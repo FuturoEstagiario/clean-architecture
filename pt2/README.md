@@ -137,8 +137,7 @@ pt2/
 │   │   ├── presenters/
 │   │   │   └── desempenho_presenter.py
 │   │   ├── repositories_impl/
-│   │   │   ├── memory_aluno_repository.py
-│   │   │   ├── sqlite_aluno_repository.py
+│   │   │   │   ├── sqlite_aluno_repository.py
 │   │   │   ├── sqlite_disciplina_repository.py
 │   │   │   ├── sqlite_frequencia_repository.py
 │   │   │   ├── sqlite_matricula_repository.py
@@ -168,7 +167,7 @@ pt2/
 ### 1. Requisitos de Instalação
 Certifique-se de que os pacotes necessários estão instalados:
 ```bash
-pip install flask pytest pypdf
+pip install flask pytest
 ```
 
 ### 2. Executar Demonstração Console (CLI)

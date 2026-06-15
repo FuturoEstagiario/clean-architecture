@@ -170,3 +170,41 @@ def test_login_duplicado_retorna_erro(clean_container):
     clean_container.cadastrar_usuario_use_case.executar("bruno", "segredo1", "aluno")
     with pytest.raises(ValueError, match="já está em uso"):
         clean_container.cadastrar_usuario_use_case.executar("bruno", "outrasenha", "admin")
+
+def test_aluno_matricula_vazia_retorna_erro():
+    with pytest.raises(ValueError, match="matrícula do aluno é obrigatória"):
+        Aluno("", "João")
+
+def test_aluno_nome_vazio_retorna_erro():
+    with pytest.raises(ValueError, match="nome do aluno é obrigatório"):
+        Aluno("2026001", "")
+
+def test_aluno_nome_apenas_espacos_retorna_erro():
+    with pytest.raises(ValueError, match="nome do aluno é obrigatório"):
+        Aluno("2026001", "   ")
+
+def test_cadastrar_usuario_senha_curta_retorna_erro(clean_container):
+    with pytest.raises(ValueError, match="senha deve ter pelo menos 6 caracteres"):
+        clean_container.cadastrar_usuario_use_case.executar("joao", "abc", "aluno")
+
+def test_cadastrar_disciplina_codigo_duplicado_retorna_erro(clean_container):
+    clean_container.disciplina_controller.cadastrar("DISC1", "Programação", 60)
+    res = clean_container.disciplina_controller.cadastrar("DISC1", "Outra", 40)
+    assert res["status"] == "erro"
+    assert "já cadastrada" in res["mensagem"]
+
+def test_consultar_desempenho_sem_matriculas(clean_container):
+    clean_container.aluno_controller.cadastrar("12345", "Alice")
+    res = clean_container.desempenho_controller.consultar_json("12345")
+    assert res["status"] == "sucesso"
+    assert res["dados"]["desempenho_disciplinas"] == []
+
+def test_consultar_desempenho_sem_frequencia_assume_100(clean_container):
+    clean_container.aluno_controller.cadastrar("12345", "Alice")
+    clean_container.disciplina_controller.cadastrar("DISC1", "Programação", 60)
+    clean_container.matricula_controller.matricular("12345", "DISC1")
+    clean_container.nota_controller.lancar("12345", "DISC1", 8.0, "TP1")
+    res = clean_container.desempenho_controller.consultar_json("12345")
+    assert res["status"] == "sucesso"
+    freq = res["dados"]["desempenho_disciplinas"][0]["frequencia"]
+    assert freq["percentual"] == "100.0%"

@@ -18,12 +18,12 @@ def main():
     container = Container(db_name)
     
     print("\n1. --- Cadastrando Alunos ---")
-    container.aluno_controller.cadastrar("2026001", "Carlos Eduardo")
-    container.aluno_controller.cadastrar("2026002", "Bruno Rodrigues")
+    print(container.aluno_controller.cadastrar("2026001", "Carlos Eduardo"))
+    print(container.aluno_controller.cadastrar("2026002", "Bruno Rodrigues"))
     
     print("\n2. --- Cadastrando Disciplinas (Novas Funcionalidades Sprint 3) ---")
-    container.disciplina_controller.cadastrar("ARQ01", "Arquitetura de Software", 60)
-    container.disciplina_controller.cadastrar("CALC01", "Cálculo Diferencial I", 80)
+    print(container.disciplina_controller.cadastrar("ARQ01", "Arquitetura de Software", 60))
+    print(container.disciplina_controller.cadastrar("CALC01", "Cálculo Diferencial I", 80))
     
     # Testar regra de negócio de carga horária inválida
     print("\n   [Teste de Regra] Tentando cadastrar disciplina com carga horária inválida:")
@@ -31,15 +31,14 @@ def main():
     print(f"   Resultado: {res_disc}")
 
     print("\n3. --- Matriculando Alunos (Novas Funcionalidades Sprint 3) ---")
-    container.matricula_controller.matricular("2026001", "ARQ01")
-    container.matricula_controller.matricular("2026001", "CALC01")
-    container.matricula_controller.matricular("2026002", "ARQ01")
+    print(container.matricula_controller.matricular("2026001", "ARQ01"))
+    print(container.matricula_controller.matricular("2026001", "CALC01"))
+    print(container.matricula_controller.matricular("2026002", "ARQ01"))
     
     print("\n4. --- Lançando Notas (Sprint 2 - Corrigido) ---")
-    # Lançar notas válidas
-    container.nota_controller.lancar("2026001", "ARQ01", 9.5, "Trabalho 1 (TP1)")
-    container.nota_controller.lancar("2026001", "ARQ01", 8.0, "Trabalho 2 (TP2)")
-    container.nota_controller.lancar("2026001", "CALC01", 7.0, "Prova 1")
+    print(container.nota_controller.lancar("2026001", "ARQ01", 9.5, "Trabalho 1 (TP1)"))
+    print(container.nota_controller.lancar("2026001", "ARQ01", 8.0, "Trabalho 2 (TP2)"))
+    print(container.nota_controller.lancar("2026001", "CALC01", 7.0, "Prova 1"))
     
     # Testar regra de negócio de notas inválidas (deve falhar de forma controlada)
     print("\n   [Teste de Regra] Tentando lançar nota 11.5 (deve falhar):")
@@ -47,8 +46,8 @@ def main():
     print(f"   Resultado: {res_nota}")
     
     print("\n5. --- Lançando Frequência (Novas Funcionalidades Sprint 3) ---")
-    container.frequencia_controller.lancar("2026001", "ARQ01", 18, 20)
-    container.frequencia_controller.lancar("2026001", "CALC01", 15, 20)
+    print(container.frequencia_controller.lancar("2026001", "ARQ01", 18, 20))
+    print(container.frequencia_controller.lancar("2026001", "CALC01", 15, 20))
     
     # Testar regra de negócio de frequência inválida (deve falhar)
     print("\n   [Teste de Regra] Tentando lançar presenças maiores que o total de aulas:")
