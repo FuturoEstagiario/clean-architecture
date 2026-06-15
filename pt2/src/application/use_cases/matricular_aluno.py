@@ -24,5 +24,4 @@ class MatricularAluno:
             
         nova_matricula = Matricula(aluno_matricula, disciplina_codigo)
         self.matricula_repository.salvar(nova_matricula)
-        print(f"Aluno {aluno.nome} matriculado com sucesso na disciplina {disciplina.nome}!")
         return nova_matricula

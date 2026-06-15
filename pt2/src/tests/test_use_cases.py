@@ -170,3 +170,121 @@ def test_login_duplicado_retorna_erro(clean_container):
     clean_container.cadastrar_usuario_use_case.executar("bruno", "segredo1", "aluno")
     with pytest.raises(ValueError, match="já está em uso"):
         clean_container.cadastrar_usuario_use_case.executar("bruno", "outrasenha", "admin")
+
+def test_aluno_matricula_vazia_retorna_erro():
+    with pytest.raises(ValueError, match="matrícula do aluno é obrigatória"):
+        Aluno("", "João")
+
+def test_aluno_nome_vazio_retorna_erro():
+    with pytest.raises(ValueError, match="nome do aluno é obrigatório"):
+        Aluno("2026001", "")
+
+def test_aluno_nome_apenas_espacos_retorna_erro():
+    with pytest.raises(ValueError, match="nome do aluno é obrigatório"):
+        Aluno("2026001", "   ")
+
+def test_cadastrar_usuario_senha_curta_retorna_erro(clean_container):
+    with pytest.raises(ValueError, match="senha deve ter pelo menos 6 caracteres"):
+        clean_container.cadastrar_usuario_use_case.executar("joao", "abc", "aluno")
+
+def test_cadastrar_disciplina_codigo_duplicado_retorna_erro(clean_container):
+    clean_container.disciplina_controller.cadastrar("DISC1", "Programação", 60)
+    res = clean_container.disciplina_controller.cadastrar("DISC1", "Outra", 40)
+    assert res["status"] == "erro"
+    assert "já cadastrada" in res["mensagem"]
+
+def test_consultar_desempenho_sem_matriculas(clean_container):
+    clean_container.aluno_controller.cadastrar("12345", "Alice")
+    res = clean_container.desempenho_controller.consultar_json("12345")
+    assert res["status"] == "sucesso"
+    assert res["dados"]["desempenho_disciplinas"] == []
+
+def test_consultar_desempenho_sem_frequencia_assume_100(clean_container):
+    clean_container.aluno_controller.cadastrar("12345", "Alice")
+    clean_container.disciplina_controller.cadastrar("DISC1", "Programação", 60)
+    clean_container.matricula_controller.matricular("12345", "DISC1")
+    clean_container.nota_controller.lancar("12345", "DISC1", 8.0, "TP1")
+    res = clean_container.desempenho_controller.consultar_json("12345")
+    assert res["status"] == "sucesso"
+    freq = res["dados"]["desempenho_disciplinas"][0]["frequencia"]
+    assert freq["percentual"] == "100.0%"
+
+def test_calcular_media_aprovado(clean_container):
+    clean_container.aluno_controller.cadastrar("12345", "Alice")
+    clean_container.disciplina_controller.cadastrar("DISC1", "Programação", 60)
+    clean_container.matricula_controller.matricular("12345", "DISC1")
+    clean_container.nota_controller.lancar("12345", "DISC1", 7.0, "TP1")
+    clean_container.nota_controller.lancar("12345", "DISC1", 8.0, "TP2")
+    res = clean_container.media_controller.calcular("12345", "DISC1")
+    assert res["status"] == "sucesso"
+    assert res["dados"]["media"] == 7.5
+    assert res["dados"]["status"] == "Aprovado por Nota"
+
+def test_calcular_media_reprovado(clean_container):
+    clean_container.aluno_controller.cadastrar("12345", "Alice")
+    clean_container.disciplina_controller.cadastrar("DISC1", "Programação", 60)
+    clean_container.matricula_controller.matricular("12345", "DISC1")
+    clean_container.nota_controller.lancar("12345", "DISC1", 4.0, "TP1")
+    clean_container.nota_controller.lancar("12345", "DISC1", 5.0, "TP2")
+    res = clean_container.media_controller.calcular("12345", "DISC1")
+    assert res["status"] == "sucesso"
+    assert res["dados"]["media"] == 4.5
+    assert res["dados"]["status"] == "Reprovado por Nota"
+
+def test_calcular_media_sem_notas(clean_container):
+    clean_container.aluno_controller.cadastrar("12345", "Alice")
+    clean_container.disciplina_controller.cadastrar("DISC1", "Programação", 60)
+    clean_container.matricula_controller.matricular("12345", "DISC1")
+    res = clean_container.media_controller.calcular("12345", "DISC1")
+    assert res["status"] == "sucesso"
+    assert res["dados"]["status"] == "Sem notas lançadas"
+
+def test_calcular_media_aluno_inexistente(clean_container):
+    res = clean_container.media_controller.calcular("99999", "DISC1")
+    assert res["status"] == "erro"
+    assert "não encontrado" in res["mensagem"]
+
+def test_calcular_aprovacao_aprovado(clean_container):
+    clean_container.aluno_controller.cadastrar("12345", "Alice")
+    clean_container.disciplina_controller.cadastrar("DISC1", "Programação", 60)
+    clean_container.matricula_controller.matricular("12345", "DISC1")
+    clean_container.nota_controller.lancar("12345", "DISC1", 7.0, "TP1")
+    clean_container.nota_controller.lancar("12345", "DISC1", 8.0, "TP2")
+    clean_container.frequencia_controller.lancar("12345", "DISC1", 18, 20)
+    res = clean_container.aprovacao_controller.calcular("12345", "DISC1")
+    assert res["status"] == "sucesso"
+    assert res["dados"]["resultado"]["status"] == "Aprovado"
+
+def test_calcular_aprovacao_reprovado_por_nota(clean_container):
+    clean_container.aluno_controller.cadastrar("12345", "Alice")
+    clean_container.disciplina_controller.cadastrar("DISC1", "Programação", 60)
+    clean_container.matricula_controller.matricular("12345", "DISC1")
+    clean_container.nota_controller.lancar("12345", "DISC1", 4.0, "TP1")
+    clean_container.frequencia_controller.lancar("12345", "DISC1", 18, 20)
+    res = clean_container.aprovacao_controller.calcular("12345", "DISC1")
+    assert res["status"] == "sucesso"
+    assert res["dados"]["resultado"]["status"] == "Reprovado por Nota"
+
+def test_calcular_aprovacao_sem_matricula(clean_container):
+    res = clean_container.aprovacao_controller.calcular("12345", "DISC1")
+    assert res["status"] == "erro"
+
+def test_alterar_situacao_aluno(clean_container):
+    clean_container.aluno_controller.cadastrar("12345", "Alice")
+    res = clean_container.alterar_situacao_controller.alterar("12345", "Inativo")
+    assert res["status"] == "sucesso"
+    assert "Inativo" in res["mensagem"]
+    alunos = clean_container.aluno_controller.listar()
+    aluno = next(a for a in alunos["dados"] if a["matricula"] == "12345")
+    assert aluno["situacao"] == "Inativo"
+
+def test_alterar_situacao_aluno_inexistente(clean_container):
+    res = clean_container.alterar_situacao_controller.alterar("99999", "Inativo")
+    assert res["status"] == "erro"
+    assert "não encontrado" in res["mensagem"]
+
+def test_alterar_situacao_aluno_valor_vazio(clean_container):
+    clean_container.aluno_controller.cadastrar("12345", "Alice")
+    res = clean_container.alterar_situacao_controller.alterar("12345", "")
+    assert res["status"] == "erro"
+    assert "obrigatória" in res["mensagem"]

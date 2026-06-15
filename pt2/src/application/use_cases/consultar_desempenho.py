@@ -48,7 +48,7 @@ class ConsultarDesempenho:
             else:
                 aulas_presente = 0
                 aulas_total = 0
-                percentual_f = 100.0  # Sem faltas lançadas assume 100% ou 0.0, vamos usar 100.0 como padrão
+                percentual_f = 100.0
                 
             disciplina_dto = DisciplinaDesempenhoDTO(
                 disciplina_codigo=disc.codigo,

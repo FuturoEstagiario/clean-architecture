@@ -42,3 +42,13 @@ class SQLiteAlunoRepository(IAlunoRepository):
             aluno.situacao = row["situacao"]
             alunos.append(aluno)
         return alunos
+
+    def atualizar_situacao(self, matricula: str, nova_situacao: str) -> None:
+        conn = self.connection_manager.get_connection()
+        cursor = conn.cursor()
+        cursor.execute(
+            "UPDATE alunos SET situacao = ? WHERE matricula = ?",
+            (nova_situacao, matricula),
+        )
+        conn.commit()
+        conn.close()

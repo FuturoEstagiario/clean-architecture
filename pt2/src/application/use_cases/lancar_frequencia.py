@@ -17,5 +17,4 @@ class LancarFrequencia:
         nova_frequencia = Frequencia(aluno_matricula, disciplina_codigo, aulas_presente, aulas_total)
         
         self.frequencia_repository.salvar(nova_frequencia)
-        print(f"Frequência lançada com sucesso para o aluno {aluno_matricula}: {aulas_presente}/{aulas_total} aulas.")
         return nova_frequencia
