@@ -1,33 +1,37 @@
 {% extends "base.html" %}
 {% block title %}Alunos{% endblock %}
 {% block content %}
-<section class="module">
-    <h2>Alunos</h2>
-    <div class="grid">
-        <div class="card">
-            <div class="card-header">
-                <span class="method POST">POST</span>
-                <span class="endpoint">/api/alunos</span>
-            </div>
-            <p class="desc">Cadastra um novo aluno no sistema.</p>
-            <label>Matrícula</label><input id="a_mat" placeholder="ex: 2026001">
-            <label>Nome</label><input id="a_nom" placeholder="ex: Carlos Eduardo">
-            <button class="btn-post" onclick="post('/api/alunos',{matricula:v('a_mat'),nome:v('a_nom')},'r_aluno')">Cadastrar Aluno</button>
-            <div class="result" id="r_aluno"></div>
+<div class="page-head">
+    <div class="eyebrow">Cadastro</div>
+    <h1>Alunos</h1>
+    <p>Registre novos alunos e acompanhe os que já estão no sistema.</p>
+</div>
+<div class="module-grid">
+    <div class="card is-post">
+        <div class="card-header">
+            <span class="method POST">POST</span>
+            <span class="endpoint">/api/alunos</span>
         </div>
-        <div class="card">
-            <div class="card-header">
-                <span class="method GET">GET</span>
-                <span class="endpoint">/api/alunos</span>
-            </div>
-            <p class="desc">Lista os alunos cadastrados.</p>
-            <button class="btn-get" onclick="listar('/api/alunos','t_alunos',['matricula','nome','situacao'])">Atualizar Lista</button>
+        <p class="desc">Cadastra um novo aluno no sistema.</p>
+        <div class="field"><label>Matrícula</label><input id="a_mat" placeholder="ex: 2026001"></div>
+        <div class="field"><label>Nome</label><input id="a_nom" placeholder="ex: Carlos Eduardo"></div>
+        <button class="btn-post" data-loading-text="Cadastrando..." onclick="post('/api/alunos',{matricula:v('a_mat'),nome:v('a_nom')},'r_aluno',this,['/api/alunos','t_alunos',['matricula','nome','situacao']])">Cadastrar Aluno</button>
+        <div class="result" id="r_aluno"></div>
+    </div>
+    <div class="card is-get list-card">
+        <div class="card-header">
+            <span class="method GET">GET</span>
+            <span class="endpoint">/api/alunos</span>
+        </div>
+        <p class="desc">Lista os alunos cadastrados.</p>
+        <button class="btn-get" data-loading-text="Carregando..." onclick="listar('/api/alunos','t_alunos',['matricula','nome','situacao'],this)">Atualizar Lista</button>
+        <div class="table-wrap">
             <table>
                 <thead><tr><th>Matrícula</th><th>Nome</th><th>Situação</th></tr></thead>
                 <tbody id="t_alunos"></tbody>
             </table>
         </div>
     </div>
-</section>
+</div>
 <script>document.addEventListener('DOMContentLoaded', () => listar('/api/alunos','t_alunos',['matricula','nome','situacao']));</script>
 {% endblock %}

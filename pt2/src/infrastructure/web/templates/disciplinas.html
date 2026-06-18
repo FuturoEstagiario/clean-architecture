@@ -1,35 +1,42 @@
 {% extends "base.html" %}
 {% block title %}Disciplinas{% endblock %}
 {% block content %}
-<section class="module">
-    <h2>Disciplinas</h2>
-    <div class="grid">
-        <div class="card">
-            <div class="card-header">
-                <span class="method POST">POST</span>
-                <span class="endpoint">/api/disciplinas</span>
-            </div>
-            <p class="desc">Cadastra uma disciplina.</p>
-            <div class="rule">⚠ Carga horária deve ser &gt; 0.</div>
-            <label>Código</label><input id="d_cod" placeholder="ex: ARQ01">
-            <label>Nome</label><input id="d_nom" placeholder="ex: Arquitetura de Software">
-            <label>Carga Horária (h)</label><input id="d_ch" type="number" placeholder="ex: 60">
-            <button class="btn-post" onclick="post('/api/disciplinas',{codigo:v('d_cod'),nome:v('d_nom'),carga_horaria:parseInt(v('d_ch'))},'r_disc')">Cadastrar Disciplina</button>
-            <div class="result" id="r_disc"></div>
+<div class="page-head">
+    <div class="eyebrow">Cadastro</div>
+    <h1>Disciplinas</h1>
+    <p>Defina disciplinas e suas cargas horárias para vincular alunos depois.</p>
+</div>
+<div class="module-grid">
+    <div class="card is-post">
+        <div class="card-header">
+            <span class="method POST">POST</span>
+            <span class="endpoint">/api/disciplinas</span>
         </div>
-        <div class="card">
-            <div class="card-header">
-                <span class="method GET">GET</span>
-                <span class="endpoint">/api/disciplinas</span>
-            </div>
-            <p class="desc">Lista as disciplinas cadastradas.</p>
-            <button class="btn-get" onclick="listar('/api/disciplinas','t_disciplinas',['codigo','nome','carga_horaria'])">Atualizar Lista</button>
+        <p class="desc">Cadastra uma disciplina.</p>
+        <div class="rule">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg>
+            <span>Carga horária deve ser maior que 0.</span>
+        </div>
+        <div class="field"><label>Código</label><input id="d_cod" placeholder="ex: ARQ01"></div>
+        <div class="field"><label>Nome</label><input id="d_nom" placeholder="ex: Arquitetura de Software"></div>
+        <div class="field"><label>Carga Horária (h)</label><input id="d_ch" type="number" placeholder="ex: 60"></div>
+        <button class="btn-post" data-loading-text="Cadastrando..." onclick="post('/api/disciplinas',{codigo:v('d_cod'),nome:v('d_nom'),carga_horaria:parseInt(v('d_ch'))},'r_disc',this,['/api/disciplinas','t_disciplinas',['codigo','nome','carga_horaria']])">Cadastrar Disciplina</button>
+        <div class="result" id="r_disc"></div>
+    </div>
+    <div class="card is-get list-card">
+        <div class="card-header">
+            <span class="method GET">GET</span>
+            <span class="endpoint">/api/disciplinas</span>
+        </div>
+        <p class="desc">Lista as disciplinas cadastradas.</p>
+        <button class="btn-get" data-loading-text="Carregando..." onclick="listar('/api/disciplinas','t_disciplinas',['codigo','nome','carga_horaria'],this)">Atualizar Lista</button>
+        <div class="table-wrap">
             <table>
                 <thead><tr><th>Código</th><th>Nome</th><th>Carga Horária</th></tr></thead>
                 <tbody id="t_disciplinas"></tbody>
             </table>
         </div>
     </div>
-</section>
+</div>
 <script>document.addEventListener('DOMContentLoaded', () => listar('/api/disciplinas','t_disciplinas',['codigo','nome','carga_horaria']));</script>
 {% endblock %}

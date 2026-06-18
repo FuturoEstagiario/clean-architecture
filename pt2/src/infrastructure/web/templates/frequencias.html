@@ -1,23 +1,28 @@
 {% extends "base.html" %}
 {% block title %}Frequências{% endblock %}
 {% block content %}
-<section class="module">
-    <h2>Frequências</h2>
-    <div class="grid">
-        <div class="card">
-            <div class="card-header">
-                <span class="method POST">POST</span>
-                <span class="endpoint">/api/frequencias</span>
-            </div>
-            <p class="desc">Registra a frequência de um aluno em uma disciplina.</p>
-            <div class="rule">⚠ Presenças ≤ Total de Aulas. Requer matrícula ativa.</div>
-            <label>Matrícula do Aluno</label><input id="f_alu" placeholder="ex: 2026001">
-            <label>Código da Disciplina</label><input id="f_dis" placeholder="ex: ARQ01">
-            <label>Aulas Presentes</label><input id="f_pre" type="number" placeholder="ex: 18">
-            <label>Total de Aulas</label><input id="f_tot" type="number" placeholder="ex: 20">
-            <button class="btn-post" onclick="post('/api/frequencias',{aluno_matricula:v('f_alu'),disciplina_codigo:v('f_dis'),aulas_presente:parseInt(v('f_pre')),aulas_total:parseInt(v('f_tot'))},'r_freq')">Lançar Frequência</button>
-            <div class="result" id="r_freq"></div>
+<div class="page-head">
+    <div class="eyebrow">Presenças</div>
+    <h1>Frequências</h1>
+    <p>Registre a presença dos alunos por disciplina ao longo do período.</p>
+</div>
+<div class="module-grid single">
+    <div class="card is-post">
+        <div class="card-header">
+            <span class="method POST">POST</span>
+            <span class="endpoint">/api/frequencias</span>
         </div>
+        <p class="desc">Registra a frequência de um aluno em uma disciplina.</p>
+        <div class="rule">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg>
+            <span>Presenças ≤ total de aulas. Requer matrícula ativa.</span>
+        </div>
+        <div class="field"><label>Matrícula do Aluno</label><input id="f_alu" placeholder="ex: 2026001"></div>
+        <div class="field"><label>Código da Disciplina</label><input id="f_dis" placeholder="ex: ARQ01"></div>
+        <div class="field"><label>Aulas Presentes</label><input id="f_pre" type="number" placeholder="ex: 18"></div>
+        <div class="field"><label>Total de Aulas</label><input id="f_tot" type="number" placeholder="ex: 20"></div>
+        <button class="btn-post" data-loading-text="Lançando..." onclick="post('/api/frequencias',{aluno_matricula:v('f_alu'),disciplina_codigo:v('f_dis'),aulas_presente:parseInt(v('f_pre')),aulas_total:parseInt(v('f_tot'))},'r_freq',this)">Lançar Frequência</button>
+        <div class="result" id="r_freq"></div>
     </div>
-</section>
+</div>
 {% endblock %}

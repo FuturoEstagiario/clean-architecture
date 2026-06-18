@@ -1,23 +1,28 @@
 {% extends "base.html" %}
 {% block title %}Notas{% endblock %}
 {% block content %}
-<section class="module">
-    <h2>Notas</h2>
-    <div class="grid">
-        <div class="card">
-            <div class="card-header">
-                <span class="method POST">POST</span>
-                <span class="endpoint">/api/notas</span>
-            </div>
-            <p class="desc">Lança nota de um aluno em uma disciplina.</p>
-            <div class="rule">⚠ Valor da nota: 0.0 a 10.0. Requer matrícula ativa.</div>
-            <label>Matrícula do Aluno</label><input id="n_alu" placeholder="ex: 2026001">
-            <label>Código da Disciplina</label><input id="n_dis" placeholder="ex: ARQ01">
-            <label>Valor (0–10)</label><input id="n_val" type="number" step="0.1" placeholder="ex: 9.5">
-            <label>Tipo de Avaliação</label><input id="n_tip" placeholder="ex: Trabalho 1">
-            <button class="btn-post" onclick="post('/api/notas',{aluno_matricula:v('n_alu'),disciplina_codigo:v('n_dis'),valor:parseFloat(v('n_val')),tipo_avaliacao:v('n_tip')},'r_nota')">Lançar Nota</button>
-            <div class="result" id="r_nota"></div>
+<div class="page-head">
+    <div class="eyebrow">Avaliações</div>
+    <h1>Notas</h1>
+    <p>Lance avaliações dos alunos nas disciplinas em que estão matriculados.</p>
+</div>
+<div class="module-grid single">
+    <div class="card is-post">
+        <div class="card-header">
+            <span class="method POST">POST</span>
+            <span class="endpoint">/api/notas</span>
         </div>
+        <p class="desc">Lança nota de um aluno em uma disciplina.</p>
+        <div class="rule">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg>
+            <span>Valor entre 0.0 e 10.0. Requer matrícula ativa.</span>
+        </div>
+        <div class="field"><label>Matrícula do Aluno</label><input id="n_alu" placeholder="ex: 2026001"></div>
+        <div class="field"><label>Código da Disciplina</label><input id="n_dis" placeholder="ex: ARQ01"></div>
+        <div class="field"><label>Valor (0–10)</label><input id="n_val" type="number" step="0.1" placeholder="ex: 9.5"></div>
+        <div class="field"><label>Tipo de Avaliação</label><input id="n_tip" placeholder="ex: Trabalho 1"></div>
+        <button class="btn-post" data-loading-text="Lançando..." onclick="post('/api/notas',{aluno_matricula:v('n_alu'),disciplina_codigo:v('n_dis'),valor:parseFloat(v('n_val')),tipo_avaliacao:v('n_tip')},'r_nota',this)">Lançar Nota</button>
+        <div class="result" id="r_nota"></div>
     </div>
-</section>
+</div>
 {% endblock %}
