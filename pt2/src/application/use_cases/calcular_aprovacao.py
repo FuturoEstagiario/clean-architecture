@@ -4,9 +4,7 @@ from src.application.repositories.matricula_repository import IMatriculaReposito
 from src.application.repositories.nota_repository import INotaRepository
 from src.application.repositories.frequencia_repository import IFrequenciaRepository
 from src.application.dtos.aprovacao_dto import AprovacaoDTO
-
-MEDIA_MINIMA = 6.0
-FREQUENCIA_MINIMA = 75.0
+from src.domain.services.criterio_aprovacao import CriterioAprovacao
 
 class CalcularAprovacao:
     def __init__(
@@ -48,21 +46,11 @@ class CalcularAprovacao:
                 status="Em Andamento",
             )
 
-        media = sum(n.valor for n in notas) / len(notas)
+        media = CriterioAprovacao.calcular_media([n.valor for n in notas])
         freq = self.frequencia_repository.buscar_por_aluno_e_disciplina(aluno_matricula, disciplina_codigo)
         percentual_freq = freq.percentual if freq else 0.0
 
-        aprovado_nota = media >= MEDIA_MINIMA
-        aprovado_freq = percentual_freq >= FREQUENCIA_MINIMA
-
-        if aprovado_nota and aprovado_freq:
-            status = "Aprovado"
-        elif not aprovado_nota and not aprovado_freq:
-            status = "Reprovado por Nota e Frequência"
-        elif not aprovado_nota:
-            status = "Reprovado por Nota"
-        else:
-            status = "Reprovado por Frequência"
+        status = CriterioAprovacao.situacao_final(media, percentual_freq)
 
         return AprovacaoDTO(
             aluno_matricula=aluno.matricula,
