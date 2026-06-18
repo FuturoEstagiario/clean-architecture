@@ -3,8 +3,7 @@ from src.application.repositories.disciplina_repository import IDisciplinaReposi
 from src.application.repositories.matricula_repository import IMatriculaRepository
 from src.application.repositories.nota_repository import INotaRepository
 from src.application.dtos.media_dto import MediaDTO
-
-MEDIA_MINIMA = 6.0
+from src.domain.services.criterio_aprovacao import CriterioAprovacao
 
 class CalcularMedia:
     def __init__(
@@ -45,8 +44,8 @@ class CalcularMedia:
             )
 
         valores = [n.valor for n in notas]
-        media = sum(valores) / len(valores)
-        status = "Aprovado por Nota" if media >= MEDIA_MINIMA else "Reprovado por Nota"
+        media = CriterioAprovacao.calcular_media(valores)
+        status = CriterioAprovacao.situacao_nota(media)
 
         return MediaDTO(
             aluno_matricula=aluno.matricula,
