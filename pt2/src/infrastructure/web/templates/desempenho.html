@@ -1,19 +1,21 @@
 {% extends "base.html" %}
 {% block title %}Desempenho{% endblock %}
 {% block content %}
-<section class="module">
-    <h2>Desempenho</h2>
-    <div class="grid">
-        <div class="card">
-            <div class="card-header">
-                <span class="method GET">GET</span>
-                <span class="endpoint">/api/desempenho/&lt;matricula&gt;</span>
-            </div>
-            <p class="desc">Retorna o boletim acadêmico completo via DTO + Presenter.</p>
-            <label>Matrícula do Aluno</label><input id="des_mat" placeholder="ex: 2026001">
-            <button class="btn-get" onclick="get('/api/desempenho/'+v('des_mat'),'r_des')">Consultar Desempenho</button>
-            <div class="result" id="r_des"></div>
+<div class="page-head">
+    <div class="eyebrow">Relatório</div>
+    <h1>Desempenho</h1>
+    <p>Consulte o boletim acadêmico consolidado de um aluno via DTO + Presenter.</p>
+</div>
+<div class="module-grid single">
+    <div class="card is-get">
+        <div class="card-header">
+            <span class="method GET">GET</span>
+            <span class="endpoint">/api/desempenho/&lt;matricula&gt;</span>
         </div>
+        <p class="desc">Retorna o boletim acadêmico completo do aluno.</p>
+        <div class="field"><label>Matrícula do Aluno</label><input id="des_mat" placeholder="ex: 2026001"></div>
+        <button class="btn-get" data-loading-text="Consultando..." onclick="get('/api/desempenho/'+v('des_mat'),'r_des',this)">Consultar Desempenho</button>
+        <div class="result" id="r_des"></div>
     </div>
-</section>
+</div>
 {% endblock %}

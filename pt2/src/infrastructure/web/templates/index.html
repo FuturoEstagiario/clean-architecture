@@ -1,16 +1,46 @@
 {% extends "base.html" %}
 {% block title %}Início{% endblock %}
 {% block content %}
-<section class="module">
-    <h2>Módulos do Sistema</h2>
-    <div class="grid">
-        <a class="card nav-card" href="/alunos"><h3>Alunos</h3><p class="desc">Cadastro de novos alunos.</p></a>
-        <a class="card nav-card" href="/professores"><h3>Professores</h3><p class="desc">Cadastro de professores.</p></a>
-        <a class="card nav-card" href="/disciplinas"><h3>Disciplinas</h3><p class="desc">Cadastro de disciplinas e carga horária.</p></a>
-        <a class="card nav-card" href="/matriculas"><h3>Matrículas</h3><p class="desc">Vínculo de alunos a disciplinas.</p></a>
-        <a class="card nav-card" href="/notas"><h3>Notas</h3><p class="desc">Lançamento de avaliações (0 a 10).</p></a>
-        <a class="card nav-card" href="/frequencias"><h3>Frequências</h3><p class="desc">Registro de presenças por disciplina.</p></a>
-        <a class="card nav-card" href="/desempenho"><h3>Desempenho</h3><p class="desc">Boletim acadêmico consolidado.</p></a>
-    </div>
-</section>
+<div class="page-head">
+    <div class="eyebrow">Visão Geral</div>
+    <h1>Bem-vindo ao SGA</h1>
+    <p>Sistema de Gestão Acadêmica construído sobre Clean Architecture. Escolha um módulo para começar.</p>
+</div>
+<div class="nav-grid">
+    <a class="nav-card" href="/alunos">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c0 1 2.7 2.5 6 2.5s6-1.5 6-2.5v-5"/></svg></span>
+        <div class="nav-body"><h3>Alunos</h3><p>Cadastro e consulta de alunos.</p></div>
+        <span class="nav-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
+    </a>
+    <a class="nav-card" href="/professores">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+        <div class="nav-body"><h3>Professores</h3><p>Cadastro do corpo docente.</p></div>
+        <span class="nav-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
+    </a>
+    <a class="nav-card" href="/disciplinas">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></svg></span>
+        <div class="nav-body"><h3>Disciplinas</h3><p>Disciplinas e carga horária.</p></div>
+        <span class="nav-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
+    </a>
+    <a class="nav-card" href="/matriculas">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="4" x="8" y="2" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></svg></span>
+        <div class="nav-body"><h3>Matrículas</h3><p>Vínculo de alunos a disciplinas.</p></div>
+        <span class="nav-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
+    </a>
+    <a class="nav-card" href="/notas">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg></span>
+        <div class="nav-body"><h3>Notas</h3><p>Lançamento de avaliações (0–10).</p></div>
+        <span class="nav-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
+    </a>
+    <a class="nav-card" href="/frequencias">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="m9 16 2 2 4-4"/></svg></span>
+        <div class="nav-body"><h3>Frequências</h3><p>Registro de presenças por disciplina.</p></div>
+        <span class="nav-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
+    </a>
+    <a class="nav-card" href="/desempenho">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg></span>
+        <div class="nav-body"><h3>Desempenho</h3><p>Boletim acadêmico consolidado.</p></div>
+        <span class="nav-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
+    </a>
+</div>
 {% endblock %}
